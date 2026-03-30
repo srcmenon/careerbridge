@@ -466,6 +466,7 @@ tr:hover td{background:rgba(255,255,255,0.013)}
           <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
             <input type="password" id="apify-key" placeholder="Paste Apify API token…" style="width:210px;padding:6px 10px;font-size:11.5px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:Outfit,sans-serif;outline:none" oninput="saveApifyKey()">
             <a href="https://console.apify.com/sign-up" target="_blank" class="btn btn-sm" style="font-size:11px">Get Free Key ↗</a>
+            <button class="btn btn-sm" onclick="testApifyKey()" style="font-size:11px">Test Key</button>
             <span id="apify-key-status" style="font-size:11px"></span>
             <span id="apify-credit-display" style="font-size:11px"></span>
           </div>
@@ -1328,6 +1329,33 @@ function updateApifyKeyStatus(){
   if(has) refreshCreditDisplay();
 }
 
+async function testApifyKey(){
+  const token = getApifyKey();
+  if(!token){ alert('Paste your Apify API token first.'); return; }
+  const el = document.getElementById('apify-key-status');
+  if(el){ el.textContent = 'Testing…'; el.style.color='var(--text3)'; }
+  try{
+    const r = await fetch('https://api.apify.com/v2/users/me?token='+encodeURIComponent(token));
+    const d = await r.json();
+    if(!r.ok){
+      const msg = d?.error?.message || ('HTTP '+r.status);
+      if(el){ el.textContent='❌ Invalid key: '+msg; el.style.color='var(--red)'; }
+      alert('❌ Apify key test FAILED\n\nError: '+msg+'\n\nMake sure you copied the full token from:\nconsole.apify.com/account/integrations');
+      return;
+    }
+    const name = d?.data?.username || d?.data?.email || 'user';
+    const included = d?.data?.plan?.monthlyUsageCreditsUsd ?? 5;
+    const used = d?.data?.monthlyUsage?.totalUsd ?? 0;
+    const remaining = Math.max(0, included-used);
+    if(el){ el.textContent='🟢 Key valid — hi '+name+'!'; el.style.color='var(--green)'; }
+    alert('✅ Apify key is valid!\n\nAccount: '+name+'\nPlan: $'+included+'/month free\nUsed this month: $'+used.toFixed(3)+'\nRemaining: $'+remaining.toFixed(2)+'\n\nEstimated free scrapes left: ~'+Math.floor(remaining/0.03));
+    refreshCreditDisplay();
+  }catch(e){
+    if(el){ el.textContent='❌ Connection error'; el.style.color='var(--red)'; }
+    alert('❌ Could not reach Apify API\n\n'+e.message+'\n\nCheck your internet connection.');
+  }
+}
+
 // ── Master search dispatcher (kept for legacy calls) ──────────
 async function runSearch(){ await runAISearch(); }
 
@@ -1437,23 +1465,45 @@ async function checkCreditBeforeRun(portalId){
 
 // ── Run one Apify actor and return dataset items ───────────────
 async function apifyRunActor(actorId, input, token){
-  const startResp = await fetch(
-    `https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${encodeURIComponent(token)}`,
-    { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(input) }
-  );
+  // IMPORTANT: do NOT encodeURIComponent the actorId — the ~ separator must stay as ~
+  // e.g. 'bebity~linkedin-jobs-scraper' must NOT become 'bebity%7Elinkedin-jobs-scraper'
+  const safeActorId = actorId.replace(/~/g, '~'); // keep ~ literal
+  const url = `https://api.apify.com/v2/acts/${safeActorId}/runs?token=${encodeURIComponent(token)}`;
+  let startResp;
+  try{
+    startResp = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(input)
+    });
+  }catch(netErr){
+    throw new Error('Network error reaching Apify — check your internet connection: ' + netErr.message);
+  }
   if(!startResp.ok){
-    const txt = await startResp.text().catch(()=>'');
+    const txt = await startResp.text().catch(()=>'{}');
     const code = startResp.status;
-    if(code===401||code===403) throw new Error('Invalid Apify key — check your token at console.apify.com');
+    // Parse full error detail before deciding message
+    let apiMsg = '';
+    try{ const j=JSON.parse(txt); apiMsg = j?.error?.message || j?.message || ''; }catch(e){}
+    const fullDetail = apiMsg || txt.substring(0,200);
+    if(code===401){
+      // 401 can mean bad token OR actor not found on some Apify endpoints
+      throw new Error(`Apify 401 — either invalid API token or actor not found.
+Actor: ${actorId}
+Detail: ${fullDetail}
+Check token at: console.apify.com/account/integrations`);
+    }
+    if(code===403) throw new Error(`Apify 403 — access denied.
+Actor: ${actorId}
+Detail: ${fullDetail}`);
     if(code===402) throw new Error('Apify credit exhausted — top up at console.apify.com/billing');
-    // Show full error detail for easier debugging
-    let detail = txt.substring(0,300);
-    try{ const j=JSON.parse(txt); detail = j?.error?.message || j?.message || detail; }catch(e){}
-    throw new Error(`Apify error ${code}: ${detail}`);
+    if(code===404) throw new Error(`Apify 404 — actor not found: ${actorId}
+Detail: ${fullDetail}`);
+    throw new Error(`Apify error ${code} on actor ${actorId}: ${fullDetail}`);
   }
   const startData = await startResp.json();
   const runId = startData?.data?.id;
-  if(!runId) throw new Error('No run ID returned');
+  if(!runId) throw new Error(`No run ID returned from Apify. Response: ${JSON.stringify(startData).substring(0,200)}`);
 
   // Poll up to 120s
   const deadline = Date.now() + 120000;
