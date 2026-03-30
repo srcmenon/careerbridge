@@ -1,0 +1,2694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerBridge — Personal Job Search</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0c10;--bg2:#111318;--bg3:#181c24;--bg4:#1e2330;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--border3:rgba(255,255,255,0.18);
+  --text:#e2ddd4;--text2:#8c8679;--text3:#4a4640;
+  --gold:#c8a84b;--gold2:#e6c96e;--gold-bg:rgba(200,168,75,0.09);--gold-bdr:rgba(200,168,75,0.28);
+  --green:#3fa876;--green-bg:rgba(63,168,118,0.1);--green-bdr:rgba(63,168,118,0.3);
+  --blue:#4f8fc4;--blue-bg:rgba(79,143,196,0.1);--blue-bdr:rgba(79,143,196,0.28);
+  --red:#d95555;--red-bg:rgba(217,85,85,0.1);--red-bdr:rgba(217,85,85,0.28);
+  --amber:#c88a3a;--amber-bg:rgba(200,138,58,0.1);--amber-bdr:rgba(200,138,58,0.28);
+  --munich:#9b6fd4;--munich-bg:rgba(155,111,212,0.1);--munich-bdr:rgba(155,111,212,0.28);
+  --r:8px;--rl:14px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;min-height:100vh;display:flex}
+.sidebar{width:230px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100}
+.logo{padding:22px 20px 16px;border-bottom:1px solid var(--border)}
+.logo h1{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--gold2);letter-spacing:0.01em}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:0.09em;text-transform:uppercase;margin-top:3px}
+.user-card{margin:12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 14px}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-bdr);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:var(--gold2);flex-shrink:0}
+.user-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:11px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav{padding:10px;flex:1}
+.nav-group{margin-bottom:18px}
+.nav-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);padding:0 10px;margin-bottom:5px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:400;color:var(--text2);transition:all 0.13s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.act{background:var(--gold-bg);color:var(--gold2);border:1px solid var(--gold-bdr)}
+.nav-ic{width:15px;height:15px;flex-shrink:0;opacity:0.85}
+.nbadge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:20px;background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-bdr)}
+.nbadge.g{background:var(--green-bg);color:var(--green);border-color:var(--green-bdr)}
+.nbadge.p{background:var(--munich-bg);color:var(--munich);border-color:var(--munich-bdr)}
+.sidebar-foot{padding:12px 16px;border-top:1px solid var(--border);font-size:10px;color:var(--text3);text-align:center}
+.main{margin-left:230px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--text);font-weight:400}
+.tb-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.content{padding:28px 32px;flex:1;max-width:1200px}
+.sec{display:none}.sec.act{display:block}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:16px}
+.card-t{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px}
+.card-s{font-size:11.5px;color:var(--text3);margin-bottom:16px}
+label{display:block;font-size:11.5px;color:var(--text2);margin-bottom:5px;letter-spacing:0.02em}
+input[type=text],input[type=email],input[type=url],textarea,select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:9px 12px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border 0.13s;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--gold-bdr)}
+textarea{min-height:90px;line-height:1.6}
+select{cursor:pointer}
+.field{margin-bottom:13px}
+.gr2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.gr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.gr4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.tags-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.tag{display:inline-flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border2);border-radius:50px;padding:3px 10px;font-size:11.5px;color:var(--text2)}
+.tag-x{cursor:pointer;color:var(--text3);font-size:13px;line-height:1;border:none;background:none;padding:0}
+.tag-x:hover{color:var(--red)}
+.tin-row{display:flex;gap:7px;margin-top:7px}
+.tin-row input{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r);font-family:'Outfit',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);transition:all 0.13s}
+.btn:hover{background:var(--bg4);color:var(--text);border-color:var(--border3)}
+.btn-gold{background:var(--gold);color:#100e04;border-color:var(--gold)}
+.btn-gold:hover{background:var(--gold2);border-color:var(--gold2)}
+.btn-sm{padding:6px 12px;font-size:11.5px}
+.btn-xs{padding:4px 9px;font-size:11px}
+.btn:disabled{opacity:0.38;cursor:not-allowed}
+.section-h{margin-bottom:22px}
+.section-h h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:400;color:var(--text)}
+.section-h p{font-size:12.5px;color:var(--text3);margin-top:3px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.65s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.alert{padding:10px 14px;border-radius:var(--r);font-size:12px;margin-bottom:14px;line-height:1.5}
+.alert-i{background:var(--blue-bg);border:1px solid var(--blue-bdr);color:var(--blue)}
+.alert-g{background:var(--green-bg);border:1px solid var(--green-bdr);color:var(--green)}
+.alert-gold{background:var(--gold-bg);border:1px solid var(--gold-bdr);color:var(--gold2)}
+.alert-munich{background:var(--munich-bg);border:1px solid var(--munich-bdr);color:var(--munich)}
+/* Status badges */
+.sb{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:50px;font-size:10.5px;font-weight:500;white-space:nowrap}
+.sb-saved{background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
+.sb-applied{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bdr)}
+.sb-screen{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr)}
+.sb-interview{background:var(--gold-bg);color:var(--gold2);border:1px solid var(--gold-bdr)}
+.sb-offer{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bdr)}
+.sb-rejected{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bdr)}
+/* Region badges */
+.rb{display:inline-flex;align-items:center;padding:2px 7px;border-radius:50px;font-size:10px;white-space:nowrap}
+.rb-munich{background:var(--munich-bg);color:var(--munich);border:1px solid var(--munich-bdr)}
+.rb-germany{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-bdr)}
+.rb-europe{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bdr)}
+.rb-dubai{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bdr)}
+/* Skill match */
+.sm-high{color:var(--green);font-weight:500}
+.sm-mid{color:var(--gold);font-weight:500}
+.sm-low{color:var(--red);font-weight:500}
+.sm-none{color:var(--text3)}
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;text-align:center}
+.stat-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;line-height:1}
+.stat-l{font-size:10px;color:var(--text3);margin-top:2px}
+/* Filter bar */
+.filter-bar{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:14px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)}
+.filter-bar label{margin:0;font-size:11px;white-space:nowrap;color:var(--text3)}
+.filter-bar select{width:auto;padding:5px 10px;font-size:11.5px;background:var(--bg3)}
+.filter-bar .sep{width:1px;height:20px;background:var(--border2);flex-shrink:0}
+/* Table */
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--bg3);color:var(--text3);font-weight:500;font-size:10px;letter-spacing:0.07em;text-transform:uppercase;padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--text2)}
+th.sort-asc::after{content:' ↑'}
+th.sort-desc::after{content:' ↓'}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.013)}
+.td-title{font-weight:500;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-sm{white-space:nowrap}
+.tbl-empty{text-align:center;padding:36px;color:var(--text3);font-size:13px}
+/* Upload zone */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--rl);padding:28px;text-align:center;cursor:pointer;transition:all 0.15s;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--gold-bdr);background:var(--gold-bg)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.upload-icon{font-size:28px;margin-bottom:8px}
+.upload-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--text3)}
+/* Portal cards */
+.portal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px}
+.psc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px;display:flex;flex-direction:column;gap:4px;transition:border-color 0.13s}
+.psc:hover{border-color:var(--gold-bdr)}
+.psc-portal{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+.psc-links{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.psc-link{display:inline-flex;align-items:center;font-size:11px;text-decoration:none;background:var(--gold-bg);border:1px solid var(--gold-bdr);border-radius:50px;padding:3px 9px;color:var(--gold);transition:all 0.13s}
+.psc-link:hover{background:var(--gold-bdr)}
+.psc-link.eu{color:var(--blue);background:var(--blue-bg);border-color:var(--blue-bdr)}
+.psc-link.ae{color:var(--green);background:var(--green-bg);border-color:var(--green-bdr)}
+.psc-link.mu{color:var(--munich);background:var(--munich-bg);border-color:var(--munich-bdr)}
+/* Company grid */
+.company-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:9px}
+.cc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:5px;transition:border-color 0.13s}
+.cc:hover{border-color:var(--border3)}
+.cc-name{font-size:13px;font-weight:500;color:var(--text)}
+.cc-sector{font-size:11px;color:var(--text3)}
+.cc-links{display:flex;gap:5px;flex-wrap:wrap}
+.cc-link{font-size:11px;color:var(--text2);text-decoration:none;padding:2px 8px;background:var(--bg4);border:1px solid var(--border2);border-radius:50px;transition:all 0.13s}
+.cc-link:hover{color:var(--gold);border-color:var(--gold-bdr)}
+/* Modals */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.65);display:none;align-items:center;justify-content:center;z-index:500}
+.modal-bg.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:26px;width:560px;max-width:94vw;max-height:90vh;overflow-y:auto}
+.modal-t{font-family:'Playfair Display',serif;font-size:19px;color:var(--text);margin-bottom:4px}
+.modal-s{font-size:12px;color:var(--text3);margin-bottom:20px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+/* Welcome */
+#welcome{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.welcome-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:36px;width:420px;max-width:92vw}
+.welcome-logo{font-family:'Playfair Display',serif;font-size:30px;color:var(--gold2);margin-bottom:6px}
+.welcome-sub{font-size:13px;color:var(--text3);margin-bottom:24px;line-height:1.6}
+/* Parsing overlay */
+.parsing-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.72);display:none;align-items:center;justify-content:center;z-index:600;flex-direction:column;gap:16px}
+.parsing-overlay.show{display:flex}
+.parsing-box{background:var(--bg2);border:1px solid var(--gold-bdr);border-radius:var(--rl);padding:32px 40px;text-align:center}
+.parsing-box h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold2);margin-bottom:8px}
+.parsing-box p{font-size:12.5px;color:var(--text3)}
+/* Section tabs */
+.region-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.rtab{padding:9px 18px;font-size:12.5px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.13s;background:none;border-left:none;border-right:none;border-top:none;font-family:'Outfit',sans-serif;font-weight:400}
+.rtab:hover{color:var(--text2)}
+.rtab.act{color:var(--gold2);border-bottom-color:var(--gold)}
+.rtab.act.mu{color:var(--munich);border-bottom-color:var(--munich)}
+.rtab.act.eu{color:var(--blue);border-bottom-color:var(--blue)}
+.rtab.act.ae{color:var(--green);border-bottom-color:var(--green)}
+.region-panel{display:none}.region-panel.act{display:block}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+/* JD modal link buttons */
+#jd-fetch-links a.btn{font-size:11.5px}
+/* Resume preview modal override */
+#resume-preview-modal .modal{width:auto}
+@media print{
+  body > *:not(#resume-preview-modal){ display:none !important; }
+  #resume-preview-modal{ position:static !important; background:transparent !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="welcome">
+  <div class="welcome-box">
+    <div class="welcome-logo">CareerBridge</div>
+    <div class="welcome-sub">Your personal AI job search assistant.<br>All data stays on <em>this device only</em> — fully private.</div>
+    <div class="field"><label>Your Name</label><input type="text" id="w-name" placeholder="e.g. Marcus" onkeydown="if(event.key==='Enter')startApp()"></div>
+    <div class="field"><label>Your Field / Current Role</label><input type="text" id="w-role" placeholder="e.g. Software Engineer, Marketing Manager" onkeydown="if(event.key==='Enter')startApp()"></div>
+    <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:6px" onclick="startApp()">Get Started →</button>
+    <div style="margin-top:14px;font-size:11px;color:var(--text3);text-align:center">Share this .html file with your partner — they get their own fresh workspace on their device.</div>
+  </div>
+</div>
+
+<div class="parsing-overlay" id="parsing-overlay">
+  <div class="parsing-box">
+    <div style="margin-bottom:14px"><span class="spinner" style="width:24px;height:24px;border-width:3px"></span></div>
+    <h3>Reading your resume…</h3>
+    <p id="parsing-status">Extracting text from document</p>
+  </div>
+</div>
+
+<div class="modal-bg" id="add-modal">
+  <div class="modal">
+    <div class="modal-t">Add Job to Tracker</div>
+    <div class="modal-s">Track any job you've found or applied for</div>
+    <div class="gr2">
+      <div class="field"><label>Job Title *</label><input type="text" id="aj-title" placeholder="Senior Product Manager"></div>
+      <div class="field"><label>Company *</label><input type="text" id="aj-company" placeholder="BMW AG"></div>
+    </div>
+    <div class="gr2">
+      <div class="field"><label>Location</label><input type="text" id="aj-location" placeholder="Munich, Germany"></div>
+      <div class="field"><label>Region</label>
+        <select id="aj-region">
+          <option value="munich">🟣 Munich</option>
+          <option value="germany">🟡 Rest of Germany</option>
+          <option value="europe">🔵 Europe</option>
+          <option value="dubai">🟢 Dubai / Gulf</option>
+        </select>
+      </div>
+    </div>
+    <div class="gr2">
+      <div class="field"><label>Source Portal</label><input type="text" id="aj-source" placeholder="StepStone / LinkedIn / Direct"></div>
+      <div class="field"><label>Date Found / Applied</label><input type="text" id="aj-date" placeholder="e.g. 29 Mar 2026"></div>
+    </div>
+    <div class="gr2">
+      <div class="field"><label>Status</label>
+        <select id="aj-status">
+          <option value="saved">💾 Saved</option>
+          <option value="applied">📤 Applied</option>
+          <option value="screen">📞 Phone Screen</option>
+          <option value="interview">🎯 Interview</option>
+          <option value="offer">🎉 Offer</option>
+          <option value="rejected">❌ Rejected</option>
+        </select>
+      </div>
+      <div class="field"><label>Salary Range</label><input type="text" id="aj-salary" placeholder="€70,000 – €90,000"></div>
+    </div>
+    <div class="field"><label>Job Description (for skill matching &amp; German detection)</label><textarea id="aj-jd" rows="4" placeholder="Paste job description — used to auto-calculate skill match % and detect German language requirements" oninput="liveCalcSkill()"></textarea></div>
+    <div class="gr2" style="margin-top:4px">
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px">
+        <div style="font-size:10.5px;color:var(--text3);margin-bottom:4px">SKILL MATCH</div>
+        <div style="font-size:18px;font-weight:500" id="aj-skill-preview">—</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px" id="aj-skill-detail"></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px">
+        <div style="font-size:10.5px;color:var(--text3);margin-bottom:4px">GERMAN REQUIRED</div>
+        <div style="font-size:14px;font-weight:500" id="aj-german-preview">—</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">Auto-detected from description</div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:12px"><label>Job Listing URL</label><input type="url" id="aj-url" placeholder="https://..."></div>
+    <div class="field"><label>Company Careers Page (direct)</label><input type="url" id="aj-careers" placeholder="https://company.com/careers"></div>
+    <div class="field"><label>Notes</label><textarea id="aj-notes" rows="2" placeholder="Key contacts, follow-up dates, interview details…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeAddModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveJob()">Save Job</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="edit-modal">
+  <div class="modal">
+    <div class="modal-t">Edit Job Entry</div>
+    <div class="modal-s">Update details for this application</div>
+    <input type="hidden" id="ej-id">
+    <div class="gr2">
+      <div class="field"><label>Job Title *</label><input type="text" id="ej-title"></div>
+      <div class="field"><label>Company *</label><input type="text" id="ej-company"></div>
+    </div>
+    <div class="gr2">
+      <div class="field"><label>Location</label><input type="text" id="ej-location"></div>
+      <div class="field"><label>Region</label>
+        <select id="ej-region">
+          <option value="munich">🟣 Munich</option>
+          <option value="germany">🟡 Rest of Germany</option>
+          <option value="europe">🔵 Europe</option>
+          <option value="dubai">🟢 Dubai / Gulf</option>
+        </select>
+      </div>
+    </div>
+    <div class="gr2">
+      <div class="field"><label>Source</label><input type="text" id="ej-source"></div>
+      <div class="field"><label>Date</label><input type="text" id="ej-date"></div>
+    </div>
+    <div class="gr2">
+      <div class="field"><label>Status</label>
+        <select id="ej-status">
+          <option value="saved">💾 Saved</option>
+          <option value="applied">📤 Applied</option>
+          <option value="screen">📞 Phone Screen</option>
+          <option value="interview">🎯 Interview</option>
+          <option value="offer">🎉 Offer</option>
+          <option value="rejected">❌ Rejected</option>
+        </select>
+      </div>
+      <div class="field"><label>German Required</label>
+        <select id="ej-german">
+          <option value="">Not Specified</option>
+          <option value="required">Required</option>
+          <option value="preferred">Preferred</option>
+          <option value="not_required">Not Required</option>
+        </select>
+      </div>
+    </div>
+    <div class="gr2">
+      <div class="field"><label>Skill Match %</label><input type="text" id="ej-skill" placeholder="e.g. 72"></div>
+      <div class="field"><label>Salary</label><input type="text" id="ej-salary"></div>
+    </div>
+    <div class="field"><label>Job URL</label><input type="url" id="ej-url"></div>
+    <div class="field"><label>Company Careers Page</label><input type="url" id="ej-careers"></div>
+    <div class="field"><label>Notes</label><textarea id="ej-notes" rows="3"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="updateJob()">Update</button>
+    </div>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <div class="logo"><h1>CareerBridge</h1><div class="logo-sub">Personal · Private · AI-Powered</div></div>
+  <div class="user-card">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="user-avatar" id="u-avatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="u-name-disp">My Profile</div>
+        <div class="user-role" id="u-role-disp">Click Profile to set up</div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="nav-group">
+      <div class="nav-lbl">Setup</div>
+      <button class="nav-item act" id="ni-profile" onclick="show('profile',this)">
+        <svg class="nav-ic" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="5.5" r="2.8"/><path d="M2 14.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>My Profile
+      </button>
+    </div>
+    <div class="nav-group">
+      <div class="nav-lbl">Discover</div>
+      <button class="nav-item" id="ni-search" onclick="show('search',this)">
+        <svg class="nav-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="4.5"/><path d="m10.5 10.5 3.5 3.5"/></svg>Find Jobs
+        <span class="nbadge p" id="search-badge" style="display:none">AI</span>
+      </button>
+      <button class="nav-item" id="ni-portals" onclick="show('portals',this)">
+        <svg class="nav-ic" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.2"/></svg>All Portals
+        <span class="nbadge">25+</span>
+      </button>
+    </div>
+    <div class="nav-group">
+      <div class="nav-lbl">Track &amp; Apply</div>
+      <button class="nav-item" id="ni-tracker" onclick="show('tracker',this)">
+        <svg class="nav-ic" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="12" height="14" rx="1.5"/><rect x="4.5" y="4.5" width="7" height="1" rx="0.5"/><rect x="4.5" y="7" width="7" height="1" rx="0.5"/><rect x="4.5" y="9.5" width="4.5" height="1" rx="0.5"/></svg>My Applications
+        <span class="nbadge g" id="tracker-count">0</span>
+      </button>
+      <button class="nav-item" id="ni-resume" onclick="show('resume',this)">
+        <svg class="nav-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="1.5" width="11" height="13" rx="1.5"/><path d="M5 5.5h6M5 8h6M5 10.5h4"/></svg>Resume Builder
+      </button>
+      <button class="nav-item" id="ni-cover" onclick="show('cover',this)">
+        <svg class="nav-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1.5" y="3" width="13" height="10" rx="1.5"/><path d="M1.5 3l6.5 5.5L14.5 3"/></svg>Cover Letter
+      </button>
+    </div>
+  </nav>
+  <div class="sidebar-foot">Your data · Your device only</div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div><div class="tb-title" id="tb-title">My Profile</div><div class="tb-sub" id="tb-sub">Stored privately on this device</div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div id="save-ind" style="font-size:11px;color:var(--text3);transition:color 0.3s"></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="password" id="gemini-key" placeholder="Paste free Gemini API key…" title="Get yours free at aistudio.google.com — no credit card needed" style="width:200px;padding:6px 10px;font-size:11.5px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:Outfit,sans-serif;outline:none" oninput="saveApiKey()">
+        <a href="https://aistudio.google.com/apikey" target="_blank" class="btn btn-sm" style="white-space:nowrap;font-size:11px">Get Free Key ↗</a>
+      </div>
+      <button class="btn btn-sm btn-gold" onclick="document.getElementById('add-modal').classList.add('show')" id="top-add-btn" style="display:none">+ Add Job</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <section class="sec act" id="s-profile">
+      <div class="section-h"><h2>My Profile</h2><p>Upload your resume to auto-fill, or enter details manually</p></div>
+
+      <div class="card">
+        <div class="card-t">Upload Resume to Auto-Fill</div>
+        <div class="card-s">Supports PDF, TXT — AI extracts your skills, experience, education and populates all fields below</div>
+        <div class="upload-zone" id="upload-zone" ondrop="handleDrop(event)" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')">
+          <input type="file" id="resume-file" accept=".pdf,.txt,.doc,.docx" onchange="handleFileUpload(this.files[0])">
+          <div class="upload-icon">📄</div>
+          <div class="upload-title">Drop your resume here or click to browse</div>
+          <div class="upload-sub">PDF or TXT · AI will extract and fill your profile automatically</div>
+        </div>
+        <div id="upload-status" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+          <div style="font-size:11.5px;color:var(--text3);margin-bottom:8px">Or paste exported profile JSON (use the Export button after filling manually on another device):</div>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="import-json-input" placeholder='Paste profile JSON here…' style="flex:1;font-size:11.5px">
+            <button class="btn btn-sm" onclick="importProfileJSON()">Import</button>
+            <button class="btn btn-sm" onclick="exportProfileJSON()">Export</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-t">Personal Information</div><div class="card-s">Used in resumes and cover letters</div>
+        <div class="gr2">
+          <div class="field"><label>Full Name</label><input type="text" id="p-name" oninput="autoSave()"></div>
+          <div class="field"><label>Email</label><input type="email" id="p-email" oninput="autoSave()"></div>
+        </div>
+        <div class="gr2">
+          <div class="field"><label>Phone</label><input type="text" id="p-phone" oninput="autoSave()"></div>
+          <div class="field"><label>Location</label><input type="text" id="p-location" oninput="autoSave()" placeholder="Munich, Germany"></div>
+        </div>
+        <div class="gr2">
+          <div class="field"><label>LinkedIn</label><input type="url" id="p-linkedin" oninput="autoSave()"></div>
+          <div class="field"><label>Portfolio / GitHub</label><input type="url" id="p-portfolio" oninput="autoSave()"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-t">Skills &amp; Languages</div><div class="card-s">These are matched against job descriptions to calculate skill match %</div>
+        <label>Technical &amp; Professional Skills</label>
+        <div class="tin-row"><input type="text" id="sk-in" placeholder="Type skill + Enter" onkeydown="addTag(event,'skills','sk-in')"><button class="btn btn-sm" onclick="addTagBtn('skills','sk-in')">Add</button></div>
+        <div class="tags-wrap" id="tags-skills"></div>
+        <div style="margin-top:16px"><label>Languages</label>
+        <div class="tin-row"><input type="text" id="lg-in" placeholder="e.g. German (C1)" onkeydown="addTag(event,'langs','lg-in')"><button class="btn btn-sm" onclick="addTagBtn('langs','lg-in')">Add</button></div>
+        <div class="tags-wrap" id="tags-langs"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-t">Work Experience</div><div class="card-s">Most recent first</div>
+        <div id="exp-list"></div>
+        <button class="btn" onclick="addExp()">+ Add Experience</button>
+      </div>
+      <div class="card">
+        <div class="card-t">Education</div><div class="card-s">Degrees, certifications, diplomas</div>
+        <div id="edu-list"></div>
+        <button class="btn" onclick="addEdu()">+ Add Education</button>
+      </div>
+      <div class="card">
+        <div class="card-t">Professional Summary</div><div class="card-s">3–5 sentences — your career value proposition</div>
+        <textarea id="p-summary" rows="4" oninput="autoSave()" placeholder="Experienced professional with X years in…"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="btn btn-gold" onclick="saveProfile()">✦ Save &amp; Find Jobs →</button>
+      </div>
+    </section>
+
+    <section class="sec" id="s-search">
+      <div class="section-h"><h2>Find Relevant Jobs</h2><p>Scrape real job listings per portal — every result links directly to the actual posting</p></div>
+      <div id="search-needs-profile" class="alert alert-gold" style="display:none">✦ Complete your profile first, then come back to search.</div>
+
+      <!-- Apify key card -->
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div>
+            <div class="card-t" style="font-size:13px">🔌 Apify Live Scraping <span style="font-size:10px;color:var(--text3);font-family:Outfit,sans-serif;font-weight:300">— free tier, no card needed</span></div>
+            <div style="font-size:11px;color:var(--text3);margin-top:3px">Real job IDs · Direct apply links · Full descriptions · Company careers search</div>
+          </div>
+          <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+            <input type="password" id="apify-key" placeholder="Paste Apify API token…" style="width:210px;padding:6px 10px;font-size:11.5px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:Outfit,sans-serif;outline:none" oninput="saveApifyKey()">
+            <a href="https://console.apify.com/sign-up" target="_blank" class="btn btn-sm" style="font-size:11px">Get Free Key ↗</a>
+            <span id="apify-key-status" style="font-size:11px"></span>
+            <span id="apify-credit-display" style="font-size:11px"></span>
+          </div>
+        </div>
+        <div style="margin-top:9px;font-size:10.5px;color:var(--text3)">
+          Free tier: $5/mo credit &nbsp;·&nbsp; Each portal search ≈ $0.01–0.05 &nbsp;·&nbsp; Without key: falls back to AI-generated listings
+        </div>
+      </div>
+
+      <!-- Per-portal scrape buttons -->
+      <div class="card" style="margin-bottom:14px" id="portal-buttons-card">
+        <div class="card-t" style="font-size:13px;margin-bottom:12px">Scrape by Portal</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px" id="portal-btn-grid">
+
+          <!-- LinkedIn -->
+          <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--blue)">🔗 LinkedIn</span>
+              <span id="portal-status-linkedin" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:8px">Munich + Germany · Real job IDs</div>
+            <button class="btn btn-sm" style="width:100%;color:var(--blue);border-color:var(--blue-bdr);justify-content:center" onclick="scrapePortal('linkedin')">
+              <span id="portal-ic-linkedin">▶</span> Scrape LinkedIn
+            </button>
+          </div>
+
+          <!-- XING -->
+          <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;font-weight:500;color:#2d9b6d">💼 XING</span>
+              <span id="portal-status-xing" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:8px">Germany-focused · DACH market</div>
+            <button class="btn btn-sm" style="width:100%;color:#2d9b6d;border-color:rgba(45,155,109,0.35);justify-content:center" onclick="scrapePortal('xing')">
+              <span id="portal-ic-xing">▶</span> Scrape XING
+            </button>
+          </div>
+
+          <!-- StepStone -->
+          <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;font-weight:500;color:#e8621a">🏆 StepStone</span>
+              <span id="portal-status-stepstone" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:8px">DE #1 board · Full descriptions</div>
+            <button class="btn btn-sm" style="width:100%;color:#e8621a;border-color:rgba(232,98,26,0.35);justify-content:center" onclick="scrapePortal('stepstone')">
+              <span id="portal-ic-stepstone">▶</span> Scrape StepStone
+            </button>
+          </div>
+
+          <!-- Indeed DE -->
+          <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;font-weight:500;color:#003a9b">🌐 Indeed.de</span>
+              <span id="portal-status-indeed" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:8px">Germany + Europe wide</div>
+            <button class="btn btn-sm" style="width:100%;color:#003a9b;border-color:rgba(0,58,155,0.3);justify-content:center" onclick="scrapePortal('indeed')">
+              <span id="portal-ic-indeed">▶</span> Scrape Indeed
+            </button>
+          </div>
+
+          <!-- Bayt (Dubai) -->
+          <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--green)">🏙️ Bayt / Gulf</span>
+              <span id="portal-status-bayt" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:8px">Dubai · UAE · MENA region</div>
+            <button class="btn btn-sm" style="width:100%;color:var(--green);border-color:var(--green-bdr);justify-content:center" onclick="scrapePortal('bayt')">
+              <span id="portal-ic-bayt">▶</span> Scrape Bayt
+            </button>
+          </div>
+
+          <!-- Company Careers -->
+          <div style="background:var(--bg3);border:1px solid var(--gold-bdr);border-radius:var(--r);padding:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--gold2)">🏢 Company Careers</span>
+              <span id="portal-status-careers" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:6px">Fetch real job listings directly from BMW, Siemens, SAP etc.</div>
+            <input type="text" id="careers-url-input" placeholder="e.g. https://careers.bmw.com" style="width:100%;font-size:11px;padding:5px 8px;margin-bottom:6px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:Outfit,sans-serif;outline:none">
+            <button class="btn btn-sm btn-gold" style="width:100%;justify-content:center" onclick="scrapeCompanyCareers()">
+              <span id="portal-ic-careers">✦</span> Fetch Jobs
+            </button>
+          </div>
+
+          <!-- AI Fallback -->
+          <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--munich)">✦ AI Generate</span>
+              <span style="font-size:10px;color:var(--text3)">No key needed</span>
+            </div>
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:8px">Gemini-suggested jobs — illustrative, may not be real postings</div>
+            <button class="btn btn-sm" style="width:100%;color:var(--munich);border-color:var(--munich-bdr);justify-content:center" onclick="runAISearch()">
+              <span id="ai-search-ic">✦</span> AI Suggest Jobs
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Per-portal progress row -->
+        <div id="portal-progress-row" style="display:none;margin-top:12px;padding:10px 14px;background:var(--bg4);border-radius:var(--r);border:1px solid var(--gold-bdr)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="spinner" style="width:14px;height:14px;border-width:2px;flex-shrink:0"></span>
+            <span style="font-size:12px;color:var(--gold2)" id="portal-progress-text">Scraping…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter bar (shown once jobs exist) -->
+      <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:12px" id="job-filters" style="display:none">
+        <select id="jf-region" onchange="applyJobFilters()" class="btn btn-sm" style="padding:6px 10px;font-size:11.5px;background:var(--bg3)">
+          <option value="">All Regions</option>
+          <option value="munich">🟣 Munich</option>
+          <option value="germany">🟡 Germany</option>
+          <option value="europe">🔵 Europe</option>
+          <option value="dubai">🟢 Dubai</option>
+        </select>
+        <select id="jf-german" onchange="applyJobFilters()" class="btn btn-sm" style="padding:6px 10px;font-size:11.5px;background:var(--bg3)">
+          <option value="">German: Any</option>
+          <option value="required">Required</option>
+          <option value="preferred">Preferred</option>
+          <option value="not_required">Not Required</option>
+          <option value="none">Not Mentioned</option>
+        </select>
+        <select id="jf-portal" onchange="applyJobFilters()" class="btn btn-sm" style="padding:6px 10px;font-size:11.5px;background:var(--bg3)">
+          <option value="">All Portals</option>
+        </select>
+        <input type="text" id="jf-search" placeholder="Search title or company…" oninput="applyJobFilters()" style="padding:6px 10px;font-size:11.5px;width:180px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:Outfit,sans-serif;outline:none">
+        <button class="btn btn-sm" onclick="clearJobFilters()">Clear</button>
+        <button class="btn btn-sm" style="color:var(--red);border-color:var(--red-bdr);margin-left:auto" onclick="clearAllFoundJobs()">🗑 Clear All Jobs</button>
+      </div>
+
+      <div id="jobs-found-wrap" style="display:none">
+        <div style="font-size:11.5px;color:var(--text3);margin-bottom:10px" id="jobs-found-count"></div>
+        <div class="tbl-wrap">
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead><tr>
+              <th style="min-width:160px">Job Title</th>
+              <th>Company</th>
+              <th>Location</th>
+              <th>Region</th>
+              <th>German Req.</th>
+              <th>Portal</th>
+              <th style="min-width:100px">Portal Link</th>
+              <th style="min-width:110px">Company Careers</th>
+              <th>Actions</th>
+            </tr></thead>
+            <tbody id="found-jobs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="search-empty-state" style="text-align:center;padding:40px 20px;color:var(--text3)">
+        <div style="font-size:28px;margin-bottom:10px">🔍</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:5px">No jobs loaded yet</div>
+        <div style="font-size:11.5px">Click any portal button above to scrape real listings, or use AI Suggest for instant results</div>
+      </div>
+    </section>
+
+    <section class="sec" id="s-tracker">
+      <div class="section-h"><h2>My Applications</h2><p>Track every job — sorted by latest first. Click any status badge to update it.</p></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-n" id="st-total">0</div><div class="stat-l">Total</div></div>
+        <div class="stat-card"><div class="stat-n" style="color:var(--text2)" id="st-saved">0</div><div class="stat-l">Saved</div></div>
+        <div class="stat-card"><div class="stat-n" style="color:var(--blue)" id="st-applied">0</div><div class="stat-l">Applied</div></div>
+        <div class="stat-card"><div class="stat-n" style="color:var(--gold)" id="st-interview">0</div><div class="stat-l">Interviews</div></div>
+        <div class="stat-card"><div class="stat-n" style="color:var(--green)" id="st-offer">0</div><div class="stat-l">Offers</div></div>
+        <div class="stat-card"><div class="stat-n" style="color:var(--red)" id="st-rejected">0</div><div class="stat-l">Rejected</div></div>
+      </div>
+      <div class="filter-bar">
+        <label>Status</label>
+        <select id="f-status" onchange="applyFilters()">
+          <option value="">All Statuses</option>
+          <option value="saved">💾 Saved</option>
+          <option value="applied">📤 Applied</option>
+          <option value="screen">📞 Phone Screen</option>
+          <option value="interview">🎯 Interview</option>
+          <option value="offer">🎉 Offer</option>
+          <option value="rejected">❌ Rejected</option>
+        </select>
+        <div class="sep"></div>
+        <label>Region</label>
+        <select id="f-region" onchange="applyFilters()">
+          <option value="">All Regions</option>
+          <option value="munich">🟣 Munich</option>
+          <option value="germany">🟡 Germany</option>
+          <option value="europe">🔵 Europe</option>
+          <option value="dubai">🟢 Dubai</option>
+        </select>
+        <div class="sep"></div>
+        <label>German</label>
+        <select id="f-german" onchange="applyFilters()">
+          <option value="">All</option>
+          <option value="required">Required</option>
+          <option value="preferred">Preferred</option>
+          <option value="not_required">Not Required</option>
+        </select>
+        <div class="sep"></div>
+        <label>Skill Match</label>
+        <select id="f-skill" onchange="applyFilters()">
+          <option value="">All</option>
+          <option value="high">High ≥ 70%</option>
+          <option value="mid">Medium ≥ 40%</option>
+          <option value="low">Low &lt; 40%</option>
+        </select>
+        <div class="sep"></div>
+        <label>Sort by</label>
+        <select id="f-sort" onchange="applyFilters()">
+          <option value="date_desc">Latest First</option>
+          <option value="date_asc">Oldest First</option>
+          <option value="skill_desc">Best Skill Match</option>
+          <option value="status">Status</option>
+          <option value="region">Region Priority</option>
+        </select>
+        <button class="btn btn-sm" onclick="clearFilters()" style="margin-left:auto">Clear Filters</button>
+        <button class="btn btn-sm btn-gold" onclick="document.getElementById('add-modal').classList.add('show')">+ Add Job</button>
+      </div>
+      <div class="tbl-wrap">
+        <table id="jobs-table">
+          <thead><tr>
+            <th class="sortable" onclick="toggleSort('date')">Date ↓</th>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Region</th>
+            <th>Source</th>
+            <th>Status</th>
+            <th>German Req.</th>
+            <th>Skill Match</th>
+            <th>Salary</th>
+            <th>Notes</th>
+            <th>Links</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody id="jobs-tbody">
+            <tr><td colspan="12" class="tbl-empty">No jobs yet — click "+ Add Job" or find jobs in the Search section</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="sec" id="s-portals">
+      <div class="section-h"><h2>All Job Portals</h2><p>Complete directory — Germany, Europe &amp; Dubai</p></div>
+      <div class="card">
+        <div class="card-t">🇩🇪 Germany</div><div class="card-s">Top job boards for the German market</div>
+        <div class="portal-grid">
+          <div class="psc"><div class="psc-portal">🏆 StepStone.de — DE #1</div><div class="psc-links"><a class="psc-link" href="https://www.stepstone.de" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🌐 Indeed.de</div><div class="psc-links"><a class="psc-link" href="https://de.indeed.com" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">💼 XING Jobs — Network</div><div class="psc-links"><a class="psc-link" href="https://www.xing.com/jobs" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🔗 LinkedIn Jobs</div><div class="psc-links"><a class="psc-link" href="https://www.linkedin.com/jobs/" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">📋 Monster.de</div><div class="psc-links"><a class="psc-link" href="https://www.monster.de" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🏛️ Bundesagentur</div><div class="psc-links"><a class="psc-link" href="https://www.arbeitsagentur.de/jobsuche/" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🔍 Glassdoor.de</div><div class="psc-links"><a class="psc-link" href="https://www.glassdoor.de" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🚀 Wellfound — Startups</div><div class="psc-links"><a class="psc-link" href="https://wellfound.com/jobs?l=Germany" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🎓 Absolventa — Graduates</div><div class="psc-links"><a class="psc-link" href="https://www.absolventa.de" target="_blank">Open ↗</a></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-t">🇪🇺 Rest of Europe</div><div class="card-s">Austria, Switzerland, Netherlands, France &amp; pan-EU</div>
+        <div class="portal-grid">
+          <div class="psc"><div class="psc-portal">🇪🇺 EuroJobs — EU Wide</div><div class="psc-links"><a class="psc-link eu" href="https://www.eurojobs.com" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🇦🇹 Jobs.at — Austria</div><div class="psc-links"><a class="psc-link eu" href="https://www.jobs.at" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🇨🇭 Jobs.ch — Switzerland</div><div class="psc-links"><a class="psc-link eu" href="https://www.jobs.ch" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🇳🇱 Undutchables — Netherlands</div><div class="psc-links"><a class="psc-link eu" href="https://www.undutchables.nl" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🇫🇷 Welcome to the Jungle</div><div class="psc-links"><a class="psc-link eu" href="https://www.welcometothejungle.com" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🌍 Remote.com — Remote EU</div><div class="psc-links"><a class="psc-link eu" href="https://remote.com/jobs" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">💹 eFinancialCareers</div><div class="psc-links"><a class="psc-link eu" href="https://www.efinancialcareers.com" target="_blank">Open ↗</a></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-t">🇦🇪 Dubai &amp; Gulf</div><div class="card-s">UAE, Qatar, Saudi Arabia and MENA</div>
+        <div class="portal-grid">
+          <div class="psc"><div class="psc-portal">🏆 Bayt.com — MENA #1</div><div class="psc-links"><a class="psc-link ae" href="https://www.bayt.com" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🌟 NaukriGulf</div><div class="psc-links"><a class="psc-link ae" href="https://www.naukrigulf.com" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🏙️ GulfTalent — Senior</div><div class="psc-links"><a class="psc-link ae" href="https://www.gulftalent.com" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🇦🇪 Dubizzle Jobs</div><div class="psc-links"><a class="psc-link ae" href="https://www.dubizzle.com/jobs/" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">✨ Jobs.ae</div><div class="psc-links"><a class="psc-link ae" href="https://www.jobs.ae" target="_blank">Open ↗</a></div></div>
+          <div class="psc"><div class="psc-portal">🔗 LinkedIn UAE</div><div class="psc-links"><a class="psc-link ae" href="https://www.linkedin.com/jobs/search/?location=United%20Arab%20Emirates" target="_blank">Open ↗</a></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s-resume">
+      <div class="section-h"><h2>Resume Builder</h2><p>ATS-optimised resume generated from your profile, tailored to any job description</p></div>
+      <div class="card">
+        <div class="card-t">Job Description to Target</div><div class="card-s">Paste the role — the resume will mirror its exact keywords for maximum ATS score</div>
+        <div class="field"><textarea id="res-jd" rows="8" placeholder="Paste the full job description here…"></textarea></div>
+        <div class="gr2" style="margin-top:10px">
+          <div class="field"><label>Format</label>
+            <select id="res-fmt">
+              <option value="german">German Lebenslauf</option>
+              <option value="european">European CV (Europass)</option>
+              <option value="international">International / ATS-Optimised</option>
+            </select>
+          </div>
+          <div class="field"><label>Tone</label>
+            <select id="res-tone">
+              <option value="professional">Professional &amp; Formal</option>
+              <option value="dynamic">Dynamic &amp; Achievement-Led</option>
+              <option value="technical">Technical &amp; Skills-Led</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-gold" id="res-btn" onclick="genResume()"><span id="res-ic">✦</span> Generate Resume</button>
+      </div>
+      <div class="card" id="res-out-card" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div><div class="card-t">Your Resume</div><div class="card-s" style="margin:0">ATS-optimised for this posting</div></div>
+          <div style="display:flex;gap:7px">
+            <button class="btn btn-sm" onclick="copyEl('res-out')">Copy</button>
+            <button class="btn btn-sm" onclick="dlEl('res-out','resume.txt')">Download .txt</button>
+            <button class="btn btn-sm btn-gold" onclick="openResumePreview()" title="Open a print-ready styled version — print to PDF from your browser">🖨 Styled PDF</button>
+          </div>
+        </div>
+        <div id="res-out" style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:18px;font-size:12.5px;line-height:1.85;white-space:pre-wrap;color:var(--text)"></div>
+      </div>
+    </section>
+
+    <section class="sec" id="s-cover">
+      <div class="section-h"><h2>Cover Letter</h2><p>Personalised letter that passes ATS and compels interview invitations</p></div>
+      <div class="card">
+        <div class="card-t">Application Details</div><div class="card-s">More context = more authentic and effective</div>
+        <div class="field"><label>Job Description</label><textarea id="cl-jd" rows="7" placeholder="Paste job description…"></textarea></div>
+        <div class="gr2">
+          <div class="field"><label>Company Name</label><input type="text" id="cl-co" placeholder="e.g. Siemens AG"></div>
+          <div class="field"><label>Hiring Manager (if known)</label><input type="text" id="cl-mgr" placeholder="e.g. Dr. Schmidt"></div>
+        </div>
+        <div class="field"><label>Why this company?</label><textarea id="cl-why" rows="3" placeholder="e.g. BMW's commitment to sustainable mobility aligns with my work in…"></textarea></div>
+        <div class="gr2">
+          <div class="field"><label>Tone</label><select id="cl-tone"><option value="formal">Formal (German standard)</option><option value="professional">Professional &amp; Engaging</option><option value="enthusiastic">Enthusiastic &amp; Motivated</option></select></div>
+          <div class="field"><label>Length</label><select id="cl-len"><option value="concise">Concise (3 paragraphs)</option><option value="standard">Standard (4–5 paragraphs)</option><option value="detailed">Detailed (6+ paragraphs)</option></select></div>
+        </div>
+        <button class="btn btn-gold" id="cl-btn" onclick="genCL()"><span id="cl-ic">✦</span> Generate Cover Letter</button>
+      </div>
+      <div class="card" id="cl-out-card" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div><div class="card-t">Your Cover Letter</div><div class="card-s" style="margin:0">Personalised and ATS-optimised</div></div>
+          <div style="display:flex;gap:7px">
+            <button class="btn btn-sm" onclick="copyEl('cl-out')">Copy</button>
+            <button class="btn btn-sm" onclick="dlEl('cl-out','cover_letter.txt')">Download</button>
+          </div>
+        </div>
+        <div id="cl-out" style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:18px;font-size:12.5px;line-height:1.85;white-space:pre-wrap;color:var(--text)"></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ── JD Fetch Modal ─────────────────────────────────────────── -->
+<div class="modal-bg" id="jd-fetch-modal">
+  <div class="modal" style="width:620px">
+    <div class="modal-t">Paste Full Job Description</div>
+    <div class="modal-s" id="jd-fetch-subtitle">Open the job listing, copy all text, and paste it below for a fully tailored CV/CL</div>
+    <div id="jd-fetch-links" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
+    <div class="alert alert-i" style="margin-bottom:12px;font-size:11.5px">
+      <strong>How to get the full JD:</strong> Click a link above to open the job. Select all text on that page (Ctrl+A), copy (Ctrl+C), then paste below (Ctrl+V).
+    </div>
+    <div class="field">
+      <label>Full Job Description (paste here)</label>
+      <textarea id="jd-fetch-text" rows="10" placeholder="Paste the complete job description from the job listing page…" style="font-size:12px"></textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:4px;font-size:11.5px;color:var(--text3)">
+      <span id="jd-fetch-wordcount">0 words</span>
+      <span>·</span>
+      <span>More words = better tailored CV/CL</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeJDModal()">Cancel</button>
+      <button class="btn btn-gold" id="jd-fetch-confirm" onclick="confirmJDAndBuild()">Use This JD → Build</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Styled Resume Preview Modal ───────────────────────────── -->
+<div class="modal-bg" id="resume-preview-modal" style="z-index:600">
+  <div style="background:var(--bg);border:1px solid var(--border2);border-radius:var(--rl);width:820px;max-width:96vw;max-height:94vh;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:17px;color:var(--text)">Styled Resume Preview</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Print this page → Save as PDF for a polished formatted resume</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-gold" onclick="printResume()">🖨 Print / Save as PDF</button>
+        <button class="btn btn-sm" onclick="closeResumePreview()">✕ Close</button>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:24px;background:#f4f4f0">
+      <div id="resume-print-area" style="background:#fff;max-width:720px;margin:0 auto;padding:44px 48px;font-family:Georgia,serif;color:#1a1a1a;line-height:1.6;box-shadow:0 2px 20px rgba(0,0,0,0.12)"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────
+const K_NAME='cb_name',K_ROLE='cb_role',K_PROFILE='cb_profile',K_JOBS='cb_jobs',K_SEARCH='cb_search';
+
+// ── State ──────────────────────────────────────────────────────
+let profile={name:'',email:'',phone:'',location:'',linkedin:'',portfolio:'',summary:'',skills:[],langs:[],experiences:[],educations:[]};
+let jobs=[];
+let saveTimer=null;
+let expCount=0,eduCount=0;
+let currentSort='date_desc';
+
+// ── Portal URL builders ────────────────────────────────────────
+const portals={
+  munich:[
+    {name:'Indeed Munich',flag:'🌐',build:(q)=>`https://de.indeed.com/jobs?q=${enc(q)}&l=M%C3%BCnchen%2C+Bayern`},
+    {name:'LinkedIn Munich',flag:'🔗',build:(q)=>`https://www.linkedin.com/jobs/search/?keywords=${enc(q)}&location=Munich%2C+Bavaria%2C+Germany&f_TPR=r604800`},
+    {name:'StepStone Munich',flag:'🏆',build:(q)=>`https://www.stepstone.de/jobs/${enc(q.replace(/\s+/g,'-'))}/in-muenchen/`},
+    {name:'XING Munich',flag:'💼',build:(q)=>`https://www.xing.com/jobs/search?q=${enc(q)}&location=M%C3%BCnchen`},
+    {name:'Monster Munich',flag:'📋',build:(q)=>`https://www.monster.de/jobs/suche/?q=${enc(q)}&where=M%C3%BCnchen`},
+    {name:'Glassdoor Munich',flag:'🔍',build:(q)=>`https://www.glassdoor.de/Job/jobs.htm?sc.keyword=${enc(q)}&locT=C&locName=Munich%2C+Germany`},
+  ],
+  de:[
+    {name:'StepStone.de',flag:'🏆',build:(q)=>`https://www.stepstone.de/jobs/${enc(q.replace(/\s+/g,'-'))}/`},
+    {name:'Indeed.de',flag:'🌐',build:(q)=>`https://de.indeed.com/jobs?q=${enc(q)}&l=Deutschland`},
+    {name:'LinkedIn DE',flag:'🔗',build:(q)=>`https://www.linkedin.com/jobs/search/?keywords=${enc(q)}&location=Germany&f_TPR=r604800`},
+    {name:'XING Jobs',flag:'💼',build:(q)=>`https://www.xing.com/jobs/search?q=${enc(q)}`},
+    {name:'Monster.de',flag:'📋',build:(q)=>`https://www.monster.de/jobs/suche/?q=${enc(q)}`},
+    {name:'Glassdoor.de',flag:'🔍',build:(q)=>`https://www.glassdoor.de/Job/jobs.htm?sc.keyword=${enc(q)}&locT=N&locName=Germany`},
+    {name:'Bundesagentur',flag:'🏛️',build:(q)=>`https://jobsuche.arbeitsagentur.de/jobsuche/suche?angebotsart=1&was=${enc(q)}`},
+    {name:'Wellfound DE',flag:'🚀',build:(q)=>`https://wellfound.com/jobs?q=${enc(q)}&l=Germany`},
+  ],
+  eu:[
+    {name:'EuroJobs',flag:'🇪🇺',build:(q)=>`https://www.eurojobs.com/search-jobs/results/?q=${enc(q)}`},
+    {name:'Jobs.ch',flag:'🇨🇭',build:(q)=>`https://www.jobs.ch/en/vacancies/?term=${enc(q)}`},
+    {name:'Jobs.at',flag:'🇦🇹',build:(q)=>`https://www.jobs.at/jobs/${enc(q.replace(/\s+/g,'-'))}`},
+    {name:'Welcome to Jungle',flag:'🇫🇷',build:(q)=>`https://www.welcometothejungle.com/en/jobs?query=${enc(q)}`},
+    {name:'Remote.com',flag:'🌍',build:(q)=>`https://remote.com/jobs?query=${enc(q)}`},
+    {name:'eFinancialCareers',flag:'💹',build:(q)=>`https://www.efinancialcareers.com/search?q=${enc(q)}`},
+  ],
+  ae:[
+    {name:'Bayt.com',flag:'🏆',build:(q)=>`https://www.bayt.com/en/international/jobs/?q=${enc(q)}`},
+    {name:'NaukriGulf',flag:'🌟',build:(q)=>`https://www.naukrigulf.com/jobs-in-uae?q=${enc(q)}`},
+    {name:'GulfTalent',flag:'🏙️',build:(q)=>`https://www.gulftalent.com/jobs?query=${enc(q)}`},
+    {name:'Dubizzle',flag:'🇦🇪',build:(q)=>`https://www.dubizzle.com/jobs/?search=${enc(q)}`},
+    {name:'LinkedIn UAE',flag:'🔗',build:(q)=>`https://www.linkedin.com/jobs/search/?keywords=${enc(q)}&location=United%20Arab%20Emirates`},
+  ]
+};
+
+function enc(s){return encodeURIComponent(s||'');}
+
+// ── Init ───────────────────────────────────────────────────────
+function init(){
+  const name=localStorage.getItem(K_NAME);
+  if(!name){document.getElementById('welcome').style.display='flex';return;}
+  document.getElementById('welcome').style.display='none';
+  loadAll(); updateSidebar(); loadApiKey(); loadApiKey(); loadApifyKey(); updateApifyKeyStatus();
+}
+
+function startApp(){
+  const name=document.getElementById('w-name').value.trim()||'Me';
+  const role=document.getElementById('w-role').value.trim()||'Job Seeker';
+  localStorage.setItem(K_NAME,name); localStorage.setItem(K_ROLE,role);
+  profile.name=name;
+  document.getElementById('welcome').style.display='none';
+  loadAll(); updateSidebar(); loadApifyKey(); updateApifyKeyStatus();
+}
+
+function loadAll(){
+  const saved=localStorage.getItem(K_PROFILE);
+  if(saved){try{profile=JSON.parse(saved);}catch(e){}}
+  profile.name=profile.name||localStorage.getItem(K_NAME)||'';
+  document.getElementById('p-name').value=profile.name||'';
+  document.getElementById('p-email').value=profile.email||'';
+  document.getElementById('p-phone').value=profile.phone||'';
+  document.getElementById('p-location').value=profile.location||'';
+  document.getElementById('p-linkedin').value=profile.linkedin||'';
+  document.getElementById('p-portfolio').value=profile.portfolio||'';
+  document.getElementById('p-summary').value=profile.summary||'';
+  renderTags('skills'); renderTags('langs');
+  (profile.experiences||[]).forEach(e=>addExpFromData(e));
+  (profile.educations||[]).forEach(e=>addEduFromData(e));
+  const jSaved=localStorage.getItem(K_JOBS);
+  if(jSaved){try{jobs=JSON.parse(jSaved);}catch(e){jobs=[];}}
+  renderJobs();
+  loadFoundJobs();
+}
+
+function updateSidebar(){
+  const name=profile.name||localStorage.getItem(K_NAME)||'Me';
+  const role=localStorage.getItem(K_ROLE)||'Job Seeker';
+  document.getElementById('u-name-disp').textContent=name;
+  document.getElementById('u-role-disp').textContent=role;
+  document.getElementById('u-avatar').textContent=(name.charAt(0)||'?').toUpperCase();
+}
+
+// ── Resume Upload ──────────────────────────────────────────────
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  const f=e.dataTransfer.files[0];
+  if(f) handleFileUpload(f);
+}
+
+// ── PDF → base64 using FileReader (correct browser API) ──
+function readFileAsBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      // result is "data:application/pdf;base64,XXXXXX" — split off the prefix
+      const b64 = reader.result.split(',')[1];
+      resolve(b64);
+    };
+    reader.onerror = ()=> reject(new Error('FileReader failed: '+reader.error));
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Kept as stub so existing call sites don't break ──
+async function extractPdfText(file, onProgress){
+  // This path is no longer used — PDF is sent directly to API as a document.
+  // Returning empty string causes the caller to fall into the API-document branch.
+  if(onProgress) onProgress('Reading PDF…');
+  let allText='';
+  const streamRe=/stream\r?\n([\s\S]*?)\r?\nendstream/g;
+  const objRe=/<<([\s\S]*?)>>/g;
+  let sm;
+
+  // First pass: collect stream objects with their dictionary context
+  const streamMatches=[];
+  while((sm=streamRe.exec(raw))!==null){
+    const pos=sm.index;
+    // Look back for the object dictionary (up to 500 chars before stream)
+    const pre=raw.substring(Math.max(0,pos-500),pos);
+    const lastDict=pre.lastIndexOf('<<');
+    const dict=lastDict>=0?pre.substring(lastDict):'';
+    streamMatches.push({dict, data:sm[1]});
+  }
+
+  if(onProgress) onProgress(`Processing ${streamMatches.length} content streams…`);
+
+  for(const s of streamMatches){
+    const isFlate=/\/FlateDecode/.test(s.dict);
+    const isText=/\/Type\s*\/Page|\/Resources|BT[\s\S]*?ET/.test(s.dict+s.data.substring(0,200));
+
+    if(isFlate){
+      // Try to decompress
+      const compressed=new Uint8Array(s.data.length);
+      for(let i=0;i<s.data.length;i++) compressed[i]=s.data.charCodeAt(i)&0xff;
+      // Skip zlib 2-byte header if present
+      const offset=(compressed[0]===0x78)?2:0;
+      const decompressed=await inflate(compressed.slice(offset));
+      if(decompressed) allText+=extractFromStream(decompressed)+' ';
+    } else {
+      // Plain/uncompressed stream — extract directly
+      allText+=extractFromStream(s.data)+' ';
+    }
+  }
+
+  // Fallback: scan entire raw PDF for any text operators not inside streams
+  if(allText.trim().length<100){
+    allText=extractFromStream(raw);
+  }
+
+  // Clean up: collapse whitespace, fix spacing
+  allText=allText
+    .replace(/[^\x20-\x7E\n]/g,' ')  // keep printable ASCII + newlines
+    .replace(/\s+/g,' ')
+    .replace(/ ([,.:;!?])/g,'$1')
+    .trim();
+
+  return allText;
+}
+
+async function handleFileUpload(file){
+  if(!file) return;
+  const status = document.getElementById('upload-status');
+  const overlay = document.getElementById('parsing-overlay');
+  const parseStatus = document.getElementById('parsing-status');
+
+  overlay.classList.add('show');
+  parseStatus.textContent = 'Reading: ' + file.name;
+
+  const INSTRUCTION = 'Extract all career information from this resume/CV and return ONLY a valid JSON object. No markdown fences, no explanation, just raw JSON.\n\nJSON structure:\n{"name":"","email":"","phone":"","location":"","linkedin":"","portfolio":"","summary":"","skills":[],"langs":[],"experiences":[{"title":"","company":"","start":"","end":"","desc":""}],"educations":[{"degree":"","inst":"","year":"","grade":""}]}\n\nRules:\n- skills: every technical skill, tool, framework, methodology, certification mentioned\n- langs: languages with proficiency e.g. "German A2", "English C2"\n- summary: 3-5 sentence professional summary\n- experiences[].desc: achievements with quantified results\n- Return ONLY the JSON object.';
+
+  try{
+    let apiMessages;
+
+    if(file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')){
+      // Send PDF directly to Anthropic API as a native document — most reliable approach
+      parseStatus.textContent = 'Converting PDF to base64…';
+      const b64 = await readFileAsBase64(file);
+      parseStatus.textContent = 'Sending PDF to Gemini (free)…';
+      // Gemini uses inlineData for PDF — fully supported on free tier
+      apiMessages = [
+        { inlineData: { mimeType: 'application/pdf', data: b64 } },
+        { text: INSTRUCTION }
+      ];
+    } else {
+      parseStatus.textContent = 'Reading text file…';
+      const text = await file.text();
+      parseStatus.textContent = 'Sending to AI…';
+      apiMessages = [{ text: INSTRUCTION + '\n\nRESUME TEXT:\n' + text.substring(0, 12000) }];
+    }
+
+    parseStatus.textContent = 'Sending to Gemini AI (free)…';
+    const rawText = await callGemini(apiMessages, 2000);
+    const clean = rawText.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+
+    let parsed;
+    try{ parsed = JSON.parse(clean); }
+    catch(je){
+      const match = clean.match(/\{[\s\S]*\}/);
+      if(match){ parsed = JSON.parse(match[0]); }
+      else{ throw new Error('Unexpected response format: ' + clean.substring(0, 200)); }
+    }
+
+    parseStatus.textContent = 'Filling in your profile…';
+    await new Promise(r=>setTimeout(r,300));
+
+    if(parsed.name)      document.getElementById('p-name').value = parsed.name;
+    if(parsed.email)     document.getElementById('p-email').value = parsed.email;
+    if(parsed.phone)     document.getElementById('p-phone').value = parsed.phone;
+    if(parsed.location)  document.getElementById('p-location').value = parsed.location;
+    if(parsed.linkedin)  document.getElementById('p-linkedin').value = parsed.linkedin;
+    if(parsed.portfolio) document.getElementById('p-portfolio').value = parsed.portfolio;
+    if(parsed.summary)   document.getElementById('p-summary').value = parsed.summary;
+
+    if(parsed.skills?.length)      { profile.skills = parsed.skills; renderTags('skills'); }
+    if(parsed.langs?.length)       { profile.langs = parsed.langs;   renderTags('langs');  }
+    if(parsed.experiences?.length) { document.getElementById('exp-list').innerHTML=''; expCount=0; parsed.experiences.forEach(e=>addExpFromData(e)); }
+    if(parsed.educations?.length)  { document.getElementById('edu-list').innerHTML=''; eduCount=0; parsed.educations.forEach(e=>addEduFromData(e)); }
+
+    overlay.classList.remove('show');
+    const sk = parsed.skills?.length||0, ex = parsed.experiences?.length||0;
+    status.innerHTML = '<span style="color:var(--green)">\u2713 Extracted from <strong>' + file.name + '</strong>: ' + sk + ' skills, ' + ex + ' experience entries. Review below and click Save.</span>';
+    autoSave();
+
+  }catch(err){
+    overlay.classList.remove('show');
+    const msg = err.message || String(err);
+    const is429 = msg.includes('429');
+    const colour = is429 ? 'var(--amber)' : 'var(--red)';
+    status.innerHTML = '<span style="color:' + colour + '">' + (is429 ? '⚠' : '✕') + ' ' + msg.substring(0,200) + '</span>'
+      + '<br><span style="font-size:11px;color:var(--text3)">Tip: use the Import button below with the JSON file instead.</span>';
+    console.error('Resume upload error:', err);
+  }
+}
+
+// ── Profile JSON import/export ─────────────────────────────────
+function exportProfileJSON(){
+  collectProfileFields();
+  const json=JSON.stringify(profile,null,2);
+  navigator.clipboard.writeText(json).then(()=>{
+    const btn=event.currentTarget;
+    btn.textContent='✓ Copied!';
+    setTimeout(()=>btn.textContent='Export',2000);
+  }).catch(()=>{
+    // Fallback: download as file
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([json],{type:'application/json'}));
+    a.download='careerbridge-profile.json'; a.click();
+  });
+}
+
+function importProfileJSON(){
+  let raw=document.getElementById('import-json-input').value.trim();
+  if(!raw){alert('Paste your profile JSON first.');return;}
+
+  // Sanitise common copy-paste corruption
+  raw=raw
+    .replace(/\u2014/g,'-')   // em-dash -> hyphen
+    .replace(/\u2013/g,'-')   // en-dash -> hyphen
+    .replace(/\u2019/g,"'")   // right single quote
+    .replace(/\u2018/g,"'")   // left single quote
+    .replace(/\u201C/g,'"')   // left double quote
+    .replace(/\u201D/g,'"')   // right double quote
+    .replace(/\u00A0/g,' ')   // non-breaking space
+    .replace(/[\u0000-\u001F\u007F]/g,' ') // control chars (except whitespace already handled)
+    .replace(/,\s*}/g,'}')    // trailing commas
+    .replace(/,\s*]/g,']');   // trailing commas in arrays
+
+  // Extract JSON object if wrapped in code fences or extra text
+  const jsonMatch=raw.match(/(\{[\s\S]*\})/);
+  if(jsonMatch) raw=jsonMatch[1];
+
+  let parsed;
+  try{ parsed=JSON.parse(raw); }
+  catch(e){
+    // Show a useful error with position info
+    const msg=e.message||String(e);
+    document.getElementById('upload-status').innerHTML=`<span style="color:var(--red)">✕ JSON parse error: ${msg}<br>Tip: make sure you copied the entire JSON including the opening { and closing }</span>`;
+    return;
+  }
+
+  if(parsed.name)      { profile.name=parsed.name; document.getElementById('p-name').value=parsed.name; }
+  if(parsed.email)     { profile.email=parsed.email; document.getElementById('p-email').value=parsed.email; }
+  if(parsed.phone)     { profile.phone=parsed.phone; document.getElementById('p-phone').value=parsed.phone; }
+  if(parsed.location)  { profile.location=parsed.location; document.getElementById('p-location').value=parsed.location; }
+  if(parsed.linkedin)  { profile.linkedin=parsed.linkedin; document.getElementById('p-linkedin').value=parsed.linkedin; }
+  if(parsed.portfolio) { profile.portfolio=parsed.portfolio; document.getElementById('p-portfolio').value=parsed.portfolio; }
+  if(parsed.summary)   { profile.summary=parsed.summary; document.getElementById('p-summary').value=parsed.summary; }
+  if(parsed.skills?.length)       { profile.skills=parsed.skills; renderTags('skills'); }
+  if(parsed.langs?.length)        { profile.langs=parsed.langs; renderTags('langs'); }
+  if(parsed.experiences?.length)  { document.getElementById('exp-list').innerHTML=''; expCount=0; parsed.experiences.forEach(e=>addExpFromData(e)); }
+  if(parsed.educations?.length)   { document.getElementById('edu-list').innerHTML=''; eduCount=0; parsed.educations.forEach(e=>addEduFromData(e)); }
+
+  const sk=parsed.skills?.length||0, ex=parsed.experiences?.length||0;
+  document.getElementById('upload-status').innerHTML=`<span style="color:var(--green)">✓ Imported: ${sk} skills, ${ex} experience entries. Review below and click Save.</span>`;
+  document.getElementById('import-json-input').value='';
+  autoSave();
+}
+
+
+function autoSave(){
+  showSave('saving');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{saveProfile(false);showSave('saved');},900);
+}
+
+function showSave(s){
+  const el=document.getElementById('save-ind');
+  if(s==='saving'){el.style.color='var(--gold)';el.textContent='Saving…';}
+  else if(s==='saved'){el.style.color='var(--green)';el.textContent='✓ Saved';setTimeout(()=>{el.textContent='';},2200);}
+}
+
+function collectProfileFields(){
+  profile.name=document.getElementById('p-name').value;
+  profile.email=document.getElementById('p-email').value;
+  profile.phone=document.getElementById('p-phone').value;
+  profile.location=document.getElementById('p-location').value;
+  profile.linkedin=document.getElementById('p-linkedin').value;
+  profile.portfolio=document.getElementById('p-portfolio').value;
+  profile.summary=document.getElementById('p-summary').value;
+  profile.experiences=[];
+  document.querySelectorAll('[data-exp]').forEach(el=>{
+    const id=el.dataset.exp;
+    profile.experiences.push({title:v('exp-'+id+'-t'),company:v('exp-'+id+'-c'),start:v('exp-'+id+'-s'),end:v('exp-'+id+'-e'),desc:v('exp-'+id+'-d')});
+  });
+  profile.educations=[];
+  document.querySelectorAll('[data-edu]').forEach(el=>{
+    const id=el.dataset.edu;
+    profile.educations.push({degree:v('edu-'+id+'-d'),inst:v('edu-'+id+'-i'),year:v('edu-'+id+'-y'),grade:v('edu-'+id+'-g')});
+  });
+}
+
+function v(id){const el=document.getElementById(id);return el?el.value:'';}
+
+function saveProfile(redirect=true){
+  collectProfileFields();
+  localStorage.setItem(K_PROFILE,JSON.stringify(profile));
+  localStorage.setItem(K_NAME,profile.name);
+  updateSidebar();
+  if(redirect){showSave('saved');setTimeout(()=>show('search',document.getElementById('ni-search')),400);}
+}
+
+// ── Tags ───────────────────────────────────────────────────────
+function addTag(ev,type,inputId){if(ev.key==='Enter'){ev.preventDefault();addTagBtn(type,inputId);}}
+function addTagBtn(type,inputId){
+  const inp=document.getElementById(inputId);
+  const val=inp.value.trim();if(!val)return;
+  profile[type].push(val);renderTags(type);inp.value='';autoSave();
+}
+function renderTags(type){
+  document.getElementById('tags-'+type).innerHTML=profile[type].map((t,i)=>`<span class="tag">${esc(t)}<button class="tag-x" onclick="removeTag('${type}',${i})">×</button></span>`).join('');
+}
+function removeTag(type,idx){profile[type].splice(idx,1);renderTags(type);autoSave();}
+
+// ── Experience / Education ─────────────────────────────────────
+function addExp(){addExpFromData({});}
+function addExpFromData(data){
+  const id=expCount++;
+  const div=document.createElement('div');
+  div.className='card';div.dataset.exp=id;div.style.cssText='background:var(--bg3);margin-bottom:10px';
+  div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:12px;font-weight:500;color:var(--text2)">Experience #${id+1}</div>
+    <button class="btn btn-xs" onclick="this.closest('[data-exp]').remove();autoSave()">Remove</button></div>
+    <div class="gr2"><div class="field"><label>Job Title</label><input type="text" id="exp-${id}-t" value="${esc(data.title||'')}" oninput="autoSave()" placeholder="Senior Engineer"></div>
+    <div class="field"><label>Company</label><input type="text" id="exp-${id}-c" value="${esc(data.company||'')}" oninput="autoSave()" placeholder="BMW AG"></div></div>
+    <div class="gr2"><div class="field"><label>Start</label><input type="text" id="exp-${id}-s" value="${esc(data.start||'')}" oninput="autoSave()" placeholder="Jan 2021"></div>
+    <div class="field"><label>End</label><input type="text" id="exp-${id}-e" value="${esc(data.end||'')}" oninput="autoSave()" placeholder="Present"></div></div>
+    <div class="field"><label>Key Achievements</label><textarea id="exp-${id}-d" oninput="autoSave()" rows="3" placeholder="• Led team of 8 engineers…">${esc(data.desc||'')}</textarea></div>`;
+  document.getElementById('exp-list').appendChild(div);
+}
+
+function addEdu(){addEduFromData({});}
+function addEduFromData(data){
+  const id=eduCount++;
+  const div=document.createElement('div');
+  div.className='card';div.dataset.edu=id;div.style.cssText='background:var(--bg3);margin-bottom:10px';
+  div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:12px;font-weight:500;color:var(--text2)">Education #${id+1}</div>
+    <button class="btn btn-xs" onclick="this.closest('[data-edu]').remove();autoSave()">Remove</button></div>
+    <div class="gr2"><div class="field"><label>Degree</label><input type="text" id="edu-${id}-d" value="${esc(data.degree||'')}" oninput="autoSave()" placeholder="M.Sc. Computer Science"></div>
+    <div class="field"><label>Institution</label><input type="text" id="edu-${id}-i" value="${esc(data.inst||'')}" oninput="autoSave()" placeholder="TU Munich"></div></div>
+    <div class="gr2"><div class="field"><label>Year</label><input type="text" id="edu-${id}-y" value="${esc(data.year||'')}" oninput="autoSave()" placeholder="2018–2020"></div>
+    <div class="field"><label>Grade</label><input type="text" id="edu-${id}-g" value="${esc(data.grade||'')}" oninput="autoSave()" placeholder="1.5 / GPA 3.8"></div></div>`;
+  document.getElementById('edu-list').appendChild(div);
+}
+
+// ── Build profile string ───────────────────────────────────────
+function buildProfileStr(){
+  collectProfileFields();
+  let s=`NAME: ${profile.name}\nLOCATION: ${profile.location}\n`;
+  if(profile.skills.length) s+=`SKILLS: ${profile.skills.join(', ')}\n`;
+  if(profile.langs.length) s+=`LANGUAGES: ${profile.langs.join(', ')}\n`;
+  s+=`SUMMARY: ${profile.summary}\n`;
+  (profile.experiences||[]).forEach(e=>{if(e.title)s+=`EXP: ${e.title} at ${e.company} (${e.start}–${e.end})\n${e.desc}\n`;});
+  (profile.educations||[]).forEach(e=>{if(e.degree)s+=`EDU: ${e.degree} – ${e.inst} (${e.year})\n`;});
+  return s;
+}
+
+// ── Skill match & German detection ────────────────────────────
+function calcSkillMatch(jd){
+  if(!jd||!profile.skills.length) return null;
+  const jdL=jd.toLowerCase();
+  const matched=profile.skills.filter(s=>jdL.includes(s.toLowerCase()));
+  return {pct:Math.round((matched.length/profile.skills.length)*100),matched:matched.length,total:profile.skills.length};
+}
+
+function detectGerman(text){
+  if(!text) return '';
+  const t=text.toLowerCase();
+  if(/\b(deutsch(kenntnisse)?|german.{0,20}(required|mandatory|must|fluent|native|c1|c2|b2|muttersprach)|german\s+language\s+required)\b/.test(t)) return 'required';
+  if(/\b(german.{0,20}(preferred|advantage|nice|plus|b1)|german\s+is\s+a\s+plus)\b/.test(t)) return 'preferred';
+  if(/\b(no\s+german|english\s+only|german\s+not\s+required)\b/.test(t)) return 'not_required';
+  if(/\b(german|deutsch)\b/.test(t)) return 'preferred';
+  return '';
+}
+
+function liveCalcSkill(){
+  const jd=document.getElementById('aj-jd').value;
+  const sm=calcSkillMatch(jd);
+  const gd=detectGerman(jd);
+  const smEl=document.getElementById('aj-skill-preview');
+  const smDet=document.getElementById('aj-skill-detail');
+  const gdEl=document.getElementById('aj-german-preview');
+  if(sm!==null){
+    const cls=sm.pct>=70?'sm-high':sm.pct>=40?'sm-mid':'sm-low';
+    smEl.className=cls; smEl.textContent=sm.pct+'%';
+    smDet.textContent=`${sm.matched} of ${sm.total} skills matched`;
+  }else{smEl.className='sm-none';smEl.textContent='—';smDet.textContent='Add skills to your profile';}
+  const gMap={required:'🔴 Required',preferred:'🟡 Preferred',not_required:'🟢 Not Required','':`— Not mentioned`};
+  gdEl.style.color=gd==='required'?'var(--red)':gd==='preferred'?'var(--amber)':gd==='not_required'?'var(--green)':'var(--text3)';
+  gdEl.textContent=gMap[gd];
+  gdEl.dataset.val=gd;
+}
+
+// ── Apify key management ───────────────────────────────────────
+function saveApifyKey(){
+  const v = document.getElementById('apify-key').value.trim();
+  if(v) localStorage.setItem('cb_apify_key', v);
+  updateApifyKeyStatus();
+}
+function loadApifyKey(){
+  const k = localStorage.getItem('cb_apify_key');
+  if(k){ const el=document.getElementById('apify-key'); if(el) el.value=k; }
+  updateApifyKeyStatus();
+}
+function getApifyKey(){ return localStorage.getItem('cb_apify_key') || document.getElementById('apify-key')?.value?.trim() || ''; }
+function updateApifyKeyStatus(){
+  const el = document.getElementById('apify-key-status');
+  if(!el) return;
+  const has = !!getApifyKey();
+  el.textContent = has ? '🟢 Key saved' : '🔴 No key — AI mode only';
+  el.style.color = has ? 'var(--green)' : 'var(--amber)';
+  if(has) refreshCreditDisplay();
+}
+
+// ── Master search dispatcher (kept for legacy calls) ──────────
+async function runSearch(){ await runAISearch(); }
+
+// ── Apify actor IDs — FREE ONLY, no monthly rental ───────────
+// All pay-per-compute-unit. No subscription rental fee on any of these.
+const APIFY_ACTORS = {
+  // bebity~linkedin-jobs-scraper: free (no rental), keywords+locationName input schema
+  linkedin:  'bebity~linkedin-jobs-scraper',
+  // memo23~xing-scraper: free, confirmed keyword+location schema
+  xing:      'memo23~xing-scraper',
+  // stepstone: free, keyword+location schema  
+  stepstone: 'fatihtahta~stepstone-scraper-fast-reliable-4-1k',
+  // curious_coder~indeed-scraper: free, keyword+location+country schema
+  indeed:    'curious_coder~indeed-scraper',
+  // curious_coder~bayt-jobs-scraper: free, keyword+location schema
+  bayt:      'curious_coder~bayt-jobs-scraper',
+  // apify~rag-web-browser: official Apify actor, free, used for company careers pages
+  rag:       'apify~rag-web-browser'
+};
+
+// Estimated cost per run (USD) — conservative upper bound
+const ACTOR_COST_EST = {
+  linkedin:0.05, xing:0.03, stepstone:0.05,
+  indeed:0.03, bayt:0.03, rag:0.02, careers:0.02
+};
+
+// ── Fetch Apify credit balance ────────────────────────────────
+async function fetchApifyBalance(token){
+  try{
+    const r = await fetch('https://api.apify.com/v2/users/me?token='+encodeURIComponent(token));
+    if(!r.ok) return null;
+    const d = await r.json();
+    const included = d?.data?.plan?.monthlyUsageCreditsUsd ?? 5;
+    const used = d?.data?.monthlyUsage?.totalUsd ?? 0;
+    return { remaining: Math.max(0, included-used), used, included };
+  }catch(e){ return null; }
+}
+
+// ── Refresh credit display ────────────────────────────────────
+async function refreshCreditDisplay(){
+  const token = getApifyKey();
+  const el = document.getElementById('apify-credit-display');
+  if(!el || !token) return;
+  el.textContent = '…';
+  const bal = await fetchApifyBalance(token);
+  if(!bal){ el.textContent=''; return; }
+  const pct = bal.remaining / bal.included;
+  const color = pct>0.4?'var(--green)':pct>0.15?'var(--amber)':'var(--red)';
+  el.innerHTML = '<span style="color:'+color+';font-weight:500">$'+bal.remaining.toFixed(2)+' left</span>'
+    +' <span style="color:var(--text3)">of $'+bal.included.toFixed(0)+'/mo free</span>';
+}
+
+// ── Pre-run credit gate ───────────────────────────────────────
+async function checkCreditBeforeRun(portalId){
+  const token = getApifyKey();
+  const cost = ACTOR_COST_EST[portalId] || 0.05;
+  const bal = await fetchApifyBalance(token);
+  refreshCreditDisplay();
+  if(!bal) return true;
+
+  if(bal.remaining < cost){
+    alert(
+      '⛔ Not enough Apify credits for this scrape.\n\n'
+      +'Remaining this month: $'+bal.remaining.toFixed(3)+'\n'
+      +'Estimated run cost:   ~$'+cost.toFixed(2)+'\n\n'
+      +'Your free $'+bal.included+'/month renews at the start of next month.\n'
+      +'You will NEVER be charged beyond $'+bal.included+'/month on the free plan — it simply stops.\n\n'
+      +'Tip: Use "AI Suggest Jobs" (free, no Apify needed) in the meantime.'
+    );
+    return false;
+  }
+
+  if(bal.remaining < bal.included * 0.20){
+    return confirm(
+      '⚠️ Low Apify Credit\n\n'
+      +'Remaining: $'+bal.remaining.toFixed(2)+' of $'+bal.included+'/month free\n'
+      +'This scrape: ~$'+cost.toFixed(2)+'\n'
+      +'Approx scrapes left this month: ~'+Math.floor(bal.remaining/0.03)+'\n\n'
+      +'You will NOT be charged beyond $'+bal.included+'/month on the free plan.\n'
+      +'Credits reset on your monthly renewal date.\n\n'
+      +'Proceed with this scrape?'
+    );
+  }
+
+  if(!localStorage.getItem('cb_apify_cost_seen')){
+    localStorage.setItem('cb_apify_cost_seen','1');
+    alert(
+      'ℹ️ Apify Cost Transparency (first run only)\n\n'
+      +'Each portal button uses a tiny slice of your free monthly credit:\n'
+      +'  LinkedIn   ~$'+ACTOR_COST_EST.linkedin+'\n'
+      +'  XING       ~$'+ACTOR_COST_EST.xing+'\n'
+      +'  StepStone  ~$'+ACTOR_COST_EST.stepstone+'\n'
+      +'  Indeed     ~$'+ACTOR_COST_EST.indeed+'\n'
+      +'  Bayt       ~$'+ACTOR_COST_EST.bayt+'\n'
+      +'  Careers    ~$'+ACTOR_COST_EST.rag+'\n\n'
+      +'Free plan: $'+bal.included+'/month (renews automatically, no card needed)\n'
+      +'Current balance: $'+bal.remaining.toFixed(2)+'\n'
+      +'Estimated free scrapes left: ~'+Math.floor(bal.remaining/0.03)+'\n\n'
+      +'You CANNOT be charged beyond $'+bal.included+'/month on the free plan.\n'
+      +'The platform simply stops until credits renew.\n\n'
+      +'Click OK to continue.'
+    );
+  }
+
+  return true;
+}
+
+// ── Run one Apify actor and return dataset items ───────────────
+async function apifyRunActor(actorId, input, token){
+  const startResp = await fetch(
+    `https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${encodeURIComponent(token)}`,
+    { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(input) }
+  );
+  if(!startResp.ok){
+    const txt = await startResp.text().catch(()=>'');
+    const code = startResp.status;
+    if(code===401||code===403) throw new Error('Invalid Apify key — check your token at console.apify.com');
+    if(code===402) throw new Error('Apify credit exhausted — top up at console.apify.com/billing');
+    // Show full error detail for easier debugging
+    let detail = txt.substring(0,300);
+    try{ const j=JSON.parse(txt); detail = j?.error?.message || j?.message || detail; }catch(e){}
+    throw new Error(`Apify error ${code}: ${detail}`);
+  }
+  const startData = await startResp.json();
+  const runId = startData?.data?.id;
+  if(!runId) throw new Error('No run ID returned');
+
+  // Poll up to 120s
+  const deadline = Date.now() + 120000;
+  while(Date.now() < deadline){
+    await new Promise(r=>setTimeout(r,5000));
+    const pollResp = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${encodeURIComponent(token)}`);
+    if(!pollResp.ok) continue;
+    const poll = await pollResp.json();
+    const status = poll?.data?.status;
+    if(status === 'SUCCEEDED'){
+      const dsId = poll?.data?.defaultDatasetId;
+      const itemsResp = await fetch(`https://api.apify.com/v2/datasets/${dsId}/items?token=${encodeURIComponent(token)}&limit=15`);
+      if(!itemsResp.ok) throw new Error('Dataset fetch failed');
+      return await itemsResp.json();
+    }
+    if(['FAILED','ABORTED','TIMED-OUT'].includes(status)) throw new Error(`Actor ${status}`);
+  }
+  throw new Error('Timed out after 120s');
+}
+
+// ── Normalise raw items from any portal into our job format ────
+function normaliseApifyJobs(items, portalId, portalLabel){
+  return (items||[]).map(item => {
+    const title    = item.title||item.positionName||item.jobTitle||item.name||'';
+    const company  = item.companyName||item.company||item.employer||'';
+    const location = item.location||item.city||item.address||'';
+    const url      = item.jobUrl||item.url||item.job_url||item.link||item.applyUrl||'';
+    const desc     = item.descriptionText||item.description||item.snippet||item.body||'';
+    if(!title||!url) return null;
+    const locL = location.toLowerCase();
+    let region = 'germany';
+    if(locL.includes('munich')||locL.includes('münchen')) region='munich';
+    else if(locL.includes('dubai')||locL.includes('abu dhabi')||locL.includes('uae')) region='dubai';
+    else if(!locL.includes('germany')&&!locL.includes('deutsch')&&!locL.includes('berlin')&&!locL.includes('hamburg')&&!locL.includes('frankfurt')&&!locL.includes('münchen')) {
+      if(locL.includes('london')||locL.includes('paris')||locL.includes('amsterdam')||locL.includes('zurich')||locL.includes('vienna')) region='europe';
+    }
+    return {
+      id: 'fj'+Date.now()+Math.random().toString(36).slice(2,5),
+      title, company, location, region,
+      german: detectGerman(desc+' '+title),
+      portal: portalLabel,
+      portal_url: url,
+      careers_url: '',
+      description: desc.substring(0,300),
+      full_description: desc,
+      applied: false
+    };
+  }).filter(Boolean);
+}
+
+// ── Set per-portal button status ───────────────────────────────
+function setPortalBtnStatus(portalId, icon, text, color, loading){
+  const ic  = document.getElementById('portal-ic-'+portalId);
+  const st  = document.getElementById('portal-status-'+portalId);
+  if(ic) ic.innerHTML = loading ? '<span class="spinner" style="width:11px;height:11px;border-width:1.5px;vertical-align:middle"></span>' : icon;
+  if(st){ st.textContent=text; st.style.color=color; }
+  // disable/enable the button
+  const btn = document.querySelector(`button[onclick="scrapePortal('${portalId}')"]`);
+  if(btn) btn.disabled = loading;
+}
+
+function showPortalProgress(text){ 
+  document.getElementById('portal-progress-row').style.display='block';
+  document.getElementById('portal-progress-text').textContent=text;
+}
+function hidePortalProgress(){ document.getElementById('portal-progress-row').style.display='none'; }
+
+// ── Merge scraped jobs into foundJobs (additive per portal) ────
+function mergeFoundJobs(newJobs){
+  const portal = newJobs[0]?.portal||'';
+  // Remove previous results from same portal
+  foundJobs = foundJobs.filter(j=>j.portal!==portal);
+  foundJobs = [...foundJobs, ...newJobs];
+  localStorage.setItem('cb_found_jobs', JSON.stringify(foundJobs));
+  document.getElementById('job-filters').style.display='flex';
+  populatePortalFilter();
+  applyJobFilters();
+}
+
+function clearAllFoundJobs(){
+  if(!confirm('Clear all found jobs from the table?')) return;
+  foundJobs=[];
+  localStorage.removeItem('cb_found_jobs');
+  document.getElementById('jobs-found-wrap').style.display='none';
+  document.getElementById('job-filters').style.display='none';
+  document.getElementById('search-empty-state').style.display='block';
+  // Reset all portal statuses
+  ['linkedin','xing','stepstone','indeed','bayt'].forEach(p=>{
+    setPortalBtnStatus(p,'▶','',  'var(--text3)', false);
+  });
+}
+
+// ── Per-portal scrape entry point ──────────────────────────────
+async function scrapePortal(portalId){
+  const token = getApifyKey();
+  if(!token){
+    alert('Please paste your Apify API token above.\n\nGet one free (no credit card) at:\nhttps://console.apify.com/sign-up');
+    document.getElementById('apify-key').focus();
+    return;
+  }
+  collectProfileFields();
+  const jobTitle = localStorage.getItem(K_ROLE) || profile.experiences?.[0]?.title || (profile.skills||[]).slice(0,3).join(' ') || 'professional';
+
+  const PORTAL_META = {
+    linkedin:  { label:'LinkedIn',  color:'var(--blue)',   icon:'🔗' },
+    xing:      { label:'XING',      color:'#2d9b6d',       icon:'💼' },
+    stepstone: { label:'StepStone', color:'#e8621a',       icon:'🏆' },
+    indeed:    { label:'Indeed',    color:'#003a9b',       icon:'🌐' },
+    bayt:      { label:'Bayt',      color:'var(--green)',  icon:'🏙️' }
+  };
+  const meta = PORTAL_META[portalId]||{label:portalId,color:'var(--gold)',icon:'▶'};
+
+  // Credit check BEFORE starting — warns user, hard stops if insufficient
+  setPortalBtnStatus(portalId, meta.icon, 'Checking balance…', 'var(--text3)', true);
+  const creditOk = await checkCreditBeforeRun(portalId);
+  if(!creditOk){
+    setPortalBtnStatus(portalId, meta.icon, '', 'var(--text3)', false);
+    return;
+  }
+  setPortalBtnStatus(portalId, meta.icon, 'Scraping…', 'var(--gold)', true);
+  showPortalProgress(`Scraping ${meta.label} for "${jobTitle}" — this takes 30–90 seconds…`);
+
+  // Location varies by portal: Munich for DE portals, Dubai for Bayt
+  const munichLoc = portalId==='bayt' ? 'Dubai, UAE' : 'Munich, Germany';
+
+  const inputs = {
+    // bebity~linkedin-jobs-scraper: uses keywords[] + locationName
+    linkedin: {
+      keywords: [jobTitle],
+      locationName: munichLoc,
+      maxResults: 10,
+      proxy: {useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL']}
+    },
+    // memo23~xing-scraper: uses keyword + location
+    xing: {
+      keyword: jobTitle,
+      location: 'München',
+      maxResults: 10,
+      proxy: {useApifyProxy: true}
+    },
+    // fatihtahta~stepstone: uses keyword + location
+    stepstone: {
+      keyword: jobTitle,
+      location: 'München',
+      maxResults: 10,
+      proxy: {useApifyProxy: true}
+    },
+    // curious_coder~indeed-scraper: uses keyword + location + country
+    indeed: {
+      keyword: jobTitle,
+      location: 'München',
+      country: 'DE',
+      maxResults: 10,
+      proxy: {useApifyProxy: true}
+    },
+    // curious_coder~bayt-jobs-scraper: uses keyword + location
+    bayt: {
+      keyword: jobTitle,
+      location: 'Dubai',
+      maxResults: 10,
+      proxy: {useApifyProxy: true}
+    }
+  };
+
+  try{
+    const items = await apifyRunActor(APIFY_ACTORS[portalId], inputs[portalId], token);
+    const jobs  = normaliseApifyJobs(items, portalId, meta.label);
+    if(!jobs.length) throw new Error('No jobs returned — try a different job title or check your profile');
+    mergeFoundJobs(jobs);
+    setPortalBtnStatus(portalId, '✅', `${jobs.length} jobs`, 'var(--green)', false);
+  }catch(err){
+    console.error(portalId, err);
+    setPortalBtnStatus(portalId, '⚠️', err.message.substring(0,40), 'var(--amber)', false);
+    showToast('✕ '+err.message, 'var(--red)', 'var(--red-bg)');
+  }finally{
+    hidePortalProgress();
+  }
+}
+
+// ── Company careers page scraper (uses Apify RAG Web Browser) ─
+async function scrapeCompanyCareers(){
+  const token = getApifyKey();
+  if(!token){
+    alert('Please paste your Apify API token above.\n\nGet one free at:\nhttps://console.apify.com/sign-up');
+    return;
+  }
+  const careersUrl = document.getElementById('careers-url-input').value.trim();
+  if(!careersUrl || !careersUrl.startsWith('http')){
+    alert('Please enter a valid company careers URL, e.g. https://careers.bmw.com'); return;
+  }
+  collectProfileFields();
+  const jobTitle = localStorage.getItem(K_ROLE) || profile.experiences?.[0]?.title || (profile.skills||[]).slice(0,3).join(' ') || 'professional';
+
+  // Build a search URL: try to append job title as a query param to the careers page
+  let searchUrl = careersUrl;
+  try{
+    const u = new URL(careersUrl);
+    // Common careers site search param patterns
+    if(!u.search){
+      const domain = u.hostname;
+      if(domain.includes('bmw'))           searchUrl = careersUrl.replace(/\/$/, '') + '/de/de/stellenangebote.html?search='+encodeURIComponent(jobTitle);
+      else if(domain.includes('siemens'))  searchUrl = 'https://jobs.siemens.com/jobs?keywords='+encodeURIComponent(jobTitle);
+      else if(domain.includes('sap'))      searchUrl = 'https://jobs.sap.com/search/?q='+encodeURIComponent(jobTitle);
+      else if(domain.includes('allianz'))  searchUrl = 'https://careers.allianz.com/search/?q='+encodeURIComponent(jobTitle);
+      else if(domain.includes('bosch'))    searchUrl = 'https://careers.bosch.com/en/jobs?query='+encodeURIComponent(jobTitle);
+      else if(domain.includes('microsoft'))searchUrl = 'https://jobs.careers.microsoft.com/global/en/search?q='+encodeURIComponent(jobTitle);
+      else if(domain.includes('google'))   searchUrl = 'https://www.google.com/about/careers/applications/jobs/results/?q='+encodeURIComponent(jobTitle);
+      else searchUrl = careersUrl.replace(/\/$/, '') + '?q='+encodeURIComponent(jobTitle);
+    }
+  }catch(e){}
+
+  const ic = document.getElementById('portal-ic-careers');
+  const st = document.getElementById('portal-status-careers');
+  // Credit check before running
+  const creditOk2 = await checkCreditBeforeRun('careers');
+  if(!creditOk2) return;
+  ic.innerHTML = '<span class="spinner" style="width:11px;height:11px;border-width:1.5px;vertical-align:middle"></span>';
+  document.querySelector('button[onclick="scrapeCompanyCareers()"]').disabled=true;
+  showPortalProgress(`Fetching job listings from ${new URL(careersUrl).hostname}…`);
+
+  try{
+    // RAG Web Browser: fetches the page and returns markdown-like text content
+    const input = {
+      query: searchUrl,
+      maxResults: 1,
+      outputFormats: ['markdown'],
+      proxyConfiguration: {useApifyProxy:true}
+    };
+    const items = await apifyRunActor(APIFY_ACTORS.rag, input, token);
+    const pageText = items?.[0]?.markdown || items?.[0]?.text || items?.[0]?.content || '';
+
+    if(!pageText || pageText.length < 100) throw new Error('Page returned no readable content');
+
+    // Use Gemini to extract job listings from the page text
+    const extractPrompt = `Extract all job listings from this careers page content. Return a JSON array only, no markdown.
+Each object: {"title":"","location":"","url":"","description":""}
+Extract real job titles and any URLs you find. If no URLs visible, leave url="".
+Content (first 4000 chars):
+${pageText.substring(0,4000)}`;
+
+    const geminiText = await callGemini([{text:extractPrompt}], 2000);
+    let extracted;
+    try{
+      const clean = geminiText.replace(/```json|```/g,'').trim();
+      extracted = JSON.parse(clean.substring(clean.indexOf('[')));
+    }catch(e){
+      extracted = [];
+    }
+
+    if(!extracted.length) throw new Error('No job listings found on that page — try the search URL directly');
+
+    const companyName = new URL(careersUrl).hostname.replace('www.','').replace('careers.','').replace('jobs.','').split('.')[0];
+    const companyDisplay = companyName.charAt(0).toUpperCase()+companyName.slice(1);
+
+    const jobs = extracted.map(e=>({
+      id: 'fj'+Date.now()+Math.random().toString(36).slice(2,5),
+      title: e.title||'',
+      company: companyDisplay,
+      location: e.location||'',
+      region: 'germany',
+      german: detectGerman((e.description||'')+(e.title||'')),
+      portal: companyDisplay+' Careers',
+      portal_url: e.url||searchUrl,
+      careers_url: careersUrl,
+      description: (e.description||'').substring(0,300),
+      full_description: e.description||'',
+      applied: false
+    })).filter(j=>j.title);
+
+    if(!jobs.length) throw new Error('Could not extract structured jobs from page');
+    mergeFoundJobs(jobs);
+    if(st){ st.textContent=`${jobs.length} jobs`; st.style.color='var(--green)'; }
+    ic.textContent='✅';
+  }catch(err){
+    console.error('careers scrape:', err);
+    if(st){ st.textContent=err.message.substring(0,35); st.style.color='var(--amber)'; }
+    ic.textContent='⚠️';
+    showToast('✕ '+err.message, 'var(--red)', 'var(--red-bg)');
+  }finally{
+    document.querySelector('button[onclick="scrapeCompanyCareers()"]').disabled=false;
+    hidePortalProgress();
+  }
+}
+
+function showToast(msg, color, bg){
+  const t=document.createElement('div');
+  t.style.cssText=`position:fixed;bottom:24px;right:24px;background:${bg||'var(--bg3)'};border:1px solid ${color};color:${color};padding:11px 16px;border-radius:var(--r);font-size:12.5px;z-index:9999;max-width:340px;line-height:1.4`;
+  t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),4000);
+}
+
+// ── AI-only fallback ──────────────────────────────────────────
+async function runAISearch(){
+  collectProfileFields();
+  if(!profile.skills.length && !profile.summary && !profile.name){
+    alert('Please fill in your profile first.'); show('profile',document.getElementById('ni-profile')); return;
+  }
+  const btn=document.getElementById('ai-search-ic');
+  if(btn) btn.innerHTML='<span class="spinner"></span>';
+  document.getElementById('search-empty-state').style.display='none';
+
+  // Compact prompt — short field names, includes short description for CV/CL context
+  const system = 'Return ONLY a valid JSON array. No markdown, no text outside the array.\n'
+    + 'Each object has EXACTLY these fields:\n'
+    + '{"t":"Job Title","co":"Company","loc":"City, Country","r":"munich|germany|europe|dubai","g":"required|preferred|not_required|none","p":"Portal name","su":"portal_search_url","cu":"careers_search_url","d":"2-3 sentence job description"}\n\n'
+    + 'MANDATORY DISTRIBUTION — exactly 15 objects: first 6 r=munich, next 5 r=germany, next 2 r=europe, last 2 r=dubai.\n\n'
+    + 'URL RULES — su must be a targeted search on the named portal for this exact role+location:\n'
+    + '  LinkedIn: https://www.linkedin.com/jobs/search/?keywords=TITLE+COMPANY&location=LOCATION&f_C=COMPANY_ID (use title+company as keywords)\n'
+    + '  StepStone: https://www.stepstone.de/jobs/TITLE-SLUG/in-LOCATION-SLUG/?q=TITLE\n'
+    + '  Indeed DE: https://de.indeed.com/jobs?q=%22TITLE%22+COMPANY&l=LOCATION\n'
+    + '  XING: https://www.xing.com/jobs/search?q=TITLE+COMPANY&location=LOCATION\n'
+    + '  Monster DE: https://www.monster.de/jobs/suche/?q=TITLE&where=LOCATION\n'
+    + '  Glassdoor: https://www.glassdoor.de/Job/LOCATION-TITLE-jobs-SRCH_IL.htm\n'
+    + '  Bayt: https://www.bayt.com/en/international/jobs/?q=TITLE+COMPANY\n'
+    + '  NaukriGulf: https://www.naukrigulf.com/TITLE-jobs-in-uae?q=TITLE\n'
+    + '  GulfTalent: https://www.gulftalent.com/jobs?query=TITLE+COMPANY\n'
+    + '  Wellfound: https://wellfound.com/jobs?query=TITLE&l=LOCATION\n'
+    + 'cu = company careers page with job title search built in. Examples:\n'
+    + '  BMW: https://www.bmwgroup.jobs/de/de/stellenangebote.html?search=TITLE\n'
+    + '  Siemens: https://jobs.siemens.com/jobs?keywords=TITLE\n'
+    + '  SAP: https://jobs.sap.com/search/?q=TITLE\n'
+    + '  Allianz: https://careers.allianz.com/search/?q=TITLE\n'
+    + '  Deutsche Bank: https://careers.db.com/search/?q=TITLE\n'
+    + '  MAN: https://www.man.eu/de/de/karriere/jobs.html?q=TITLE\n'
+    + '  For any other company: use https://careers.COMPANY.com?search=TITLE or https://jobs.COMPANY.com?q=TITLE\n'
+    + 'd = 2-3 sentence description of role, key responsibilities and required skills\n'
+    + 'g = required/preferred/not_required/none based on typical role needs in that region\n'
+    + 'Vary job titles, companies AND portals across all 15. Start with [ end with ]';
+
+
+  try{
+    const rawText = await callGemini([{text: system + '\n\nCANDIDATE PROFILE:\n' + buildProfileStr().substring(0, 2000)}], 6000);
+
+    // Robust JSON extraction and repair
+    let jsonStr = rawText
+      .replace(/^[^[{]*/s, '')   // strip leading non-JSON text
+      .replace(/```json|```/g, '')
+      .trim();
+
+    // Ensure it starts with [ for array
+    if(!jsonStr.startsWith('[') && jsonStr.includes('[')){
+      jsonStr = jsonStr.substring(jsonStr.indexOf('['));
+    }
+
+    // Truncation recovery: if JSON is cut off, close it properly
+    function repairJSON(s){
+      // Count open brackets/braces
+      let sq=0, cb=0;
+      let inStr=false, esc=false;
+      for(let i=0;i<s.length;i++){
+        const c=s[i];
+        if(esc){esc=false;continue;}
+        if(c==='\\'&&inStr){esc=true;continue;}
+        if(c==='"'){inStr=!inStr;continue;}
+        if(inStr) continue;
+        if(c==='[') sq++;
+        else if(c===']') sq--;
+        else if(c==='{') cb++;
+        else if(c==='}') cb--;
+      }
+      // Remove any trailing incomplete object (find last complete })
+      let repaired = s;
+      if(cb !== 0 || sq !== 0){
+        // Find the last complete '}' before truncation
+        const lastClose = s.lastIndexOf('}');
+        if(lastClose > 0){
+          repaired = s.substring(0, lastClose+1);
+          // Close the array
+          repaired += ']';
+        }
+      }
+      return repaired;
+    }
+
+    let parsed;
+    try{
+      parsed = JSON.parse(jsonStr);
+    } catch(e1){
+      // Try repair
+      const repaired = repairJSON(jsonStr);
+      try{
+        parsed = JSON.parse(repaired);
+        console.log('JSON repaired, recovered ' + parsed.length + ' jobs');
+      } catch(e2){
+        // Last resort: extract individual job objects
+        const objPattern = /\{[^{}]+\}/g;
+        const matches = jsonStr.match(objPattern) || [];
+        parsed = matches.map(m => { try{ return JSON.parse(m); }catch(e){ return null; } }).filter(Boolean);
+        if(!parsed.length) throw new Error('Could not parse job listings. Please try again.');
+        console.log('Extracted ' + parsed.length + ' jobs via fallback');
+      }
+    }
+
+    // Normalise field names (compact -> full)
+    foundJobs = parsed.map((j, i) => ({
+      id: 'fj' + Date.now() + i,
+      title:        j.t  || j.title        || '',
+      company:      j.co || j.company       || '',
+      location:     j.loc|| j.location      || '',
+      region:       j.r  || j.region        || 'germany',
+      german:       j.g  || j.german        || 'none',
+      portal:       j.p  || j.portal        || '',
+      portal_url:   j.su || j.search_url    || j.portal_url   || '',
+      careers_url:  j.cu || j.careers_url   || '',
+      description:  j.d  || j.description   || '',
+      applied: false
+    })).filter(j => j.title);
+
+    if(!foundJobs.length) throw new Error('No jobs returned. Please try again.');
+
+    localStorage.setItem('cb_found_jobs', JSON.stringify(foundJobs));
+    document.getElementById('search-badge').style.display = 'inline';
+    document.getElementById('job-filters').style.display = 'flex';
+    populatePortalFilter();
+    applyJobFilters();
+
+  } catch(e){
+    document.getElementById('search-empty-state').style.display = 'block';
+    document.getElementById('search-empty-state').innerHTML =
+      '<div style="color:var(--red);font-size:13px;padding:20px">✕ ' + e.message + '<br><span style="font-size:11px;color:var(--text3);margin-top:6px;display:block">Try again — if it keeps failing, check your Gemini API key.</span></div>';
+    console.error(e);
+  } finally{
+    const ic2 = document.getElementById('ai-search-ic');
+    if(ic2) ic2.textContent = '✦';
+  }
+}
+
+function populatePortalFilter(){
+  const portals = [...new Set(foundJobs.map(j=>j.portal).filter(Boolean))].sort();
+  const sel = document.getElementById('jf-portal');
+  sel.innerHTML = '<option value="">All Portals</option>' + portals.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+}
+
+function applyJobFilters(){
+  const region = document.getElementById('jf-region').value;
+  const german = document.getElementById('jf-german').value;
+  const portal = document.getElementById('jf-portal').value;
+  const search = (document.getElementById('jf-search').value||'').toLowerCase();
+
+  const filtered = foundJobs.filter(j => {
+    if(j.applied) return false; // hide applied jobs
+    if(region && j.region !== region) return false;
+    if(german && (j.german||'none') !== german) return false;
+    if(portal && j.portal !== portal) return false;
+    if(search && !j.title.toLowerCase().includes(search) && !(j.company||'').toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  renderFoundJobs(filtered);
+}
+
+function clearJobFilters(){
+  ['jf-region','jf-german','jf-portal'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('jf-search').value='';
+  applyJobFilters();
+}
+
+const REGION_LABELS = {munich:'🟣 Munich', germany:'🟡 Germany', europe:'🔵 Europe', dubai:'🟢 Dubai'};
+const REGION_CLS = {munich:'rb-munich', germany:'rb-germany', europe:'rb-europe', dubai:'rb-dubai'};
+const GERMAN_LABELS = {required:'🔴 Req.', preferred:'🟡 Pref.', not_required:'🟢 No', none:'—'};
+
+function renderFoundJobs(list){
+  const wrap = document.getElementById('jobs-found-wrap');
+  const tbody = document.getElementById('found-jobs-tbody');
+  const count = document.getElementById('jobs-found-count');
+  const empty = document.getElementById('search-empty-state');
+
+  if(!list.length){
+    wrap.style.display='none'; empty.style.display='block';
+    empty.innerHTML='<div style="font-size:13px;color:var(--text3)">No jobs match your filters — try clearing them</div>';
+    return;
+  }
+  empty.style.display='none'; wrap.style.display='block';
+  count.textContent = list.length + ' job' + (list.length===1?'':'s') + ' found — sorted by region priority (Munich first)';
+
+  tbody.innerHTML = list.map(j => {
+    const rLabel = REGION_LABELS[j.region]||j.region||'—';
+    const rCls = REGION_CLS[j.region]||'rb-germany';
+    const gLabel = GERMAN_LABELS[j.german||'none']||'—';
+
+    // ── Portal Link column ─────────────────────────────────────
+    // Colour and label based on the portal name
+    const pName = (j.portal||'').toLowerCase();
+    let pColor = 'var(--gold)', pLabel = 'Search ↗';
+    if(pName.includes('linkedin'))      { pColor='var(--blue)';   pLabel='LinkedIn ↗'; }
+    else if(pName.includes('xing'))     { pColor='#2d9b6d';       pLabel='XING ↗'; }
+    else if(pName.includes('stepstone')){ pColor='#e8621a';       pLabel='StepStone ↗'; }
+    else if(pName.includes('indeed'))   { pColor='#003a9b';       pLabel='Indeed ↗'; }
+    else if(pName.includes('monster'))  { pColor='#6b35a8';       pLabel='Monster ↗'; }
+    else if(pName.includes('glassdoor')){ pColor='#0caa41';       pLabel='Glassdoor ↗'; }
+    else if(pName.includes('bayt'))     { pColor='#c8332a';       pLabel='Bayt ↗'; }
+    else if(pName.includes('naukri'))   { pColor='#f06a25';       pLabel='NaukriGulf ↗'; }
+    else if(pName.includes('gulf'))     { pColor='#1a6ea3';       pLabel='GulfTalent ↗'; }
+    else if(pName.includes('wellfound')){ pColor='#111';          pLabel='Wellfound ↗'; }
+    else if(pName.includes('xpatjobs') || pName.includes('eurojobs')){ pColor='var(--blue)'; pLabel='EuroJobs ↗'; }
+
+    const portalLinkCell = j.portal_url
+      ? `<a href="${esc(j.portal_url)}" target="_blank" onclick="trackJobClick('${j.id}')"
+           style="font-size:11px;color:${pColor};text-decoration:none;white-space:nowrap;font-weight:500">${pLabel}</a>`
+      : `<span style="color:var(--text3);font-size:11px">—</span>`;
+
+    // ── Company Careers column ─────────────────────────────────
+    // careers_url from AI already has search term baked in.
+    // We also generate a fallback search URL from the base careers domain.
+    let careersCell = '<span style="color:var(--text3);font-size:11px">—</span>';
+    if(j.careers_url){
+      // Extract base domain for the "Home" link, keep full URL for "Search"
+      let careersBase = '';
+      try{
+        const u = new URL(j.careers_url);
+        careersBase = u.origin + (u.pathname.split('?')[0].replace(/\/+$/,'') || '');
+      }catch(e){ careersBase = j.careers_url.split('?')[0]; }
+
+      // Build a fallback search URL appending job title if not already a search URL
+      const isSearchUrl = j.careers_url.includes('?') || j.careers_url.includes('search') || j.careers_url.includes('jobs');
+      const titleSlug = encodeURIComponent(j.title||'');
+      const careersSearchUrl = isSearchUrl
+        ? j.careers_url
+        : (careersBase + (careersBase.includes('careers') ? '?q=' : '/jobs?q=') + titleSlug);
+
+      careersCell = `<a href="${esc(careersBase)}" target="_blank" onclick="trackJobClick('${j.id}')"
+          style="font-size:11px;color:var(--green);text-decoration:none;white-space:nowrap">Home ↗</a>
+        <span style="color:var(--text3);margin:0 3px;font-size:11px">·</span>
+        <a href="${esc(careersSearchUrl)}" target="_blank" onclick="trackJobClick('${j.id}')"
+          style="font-size:11px;color:var(--gold);text-decoration:none;white-space:nowrap" title="Search for ${esc(j.title)} on company careers site">Find Role ↗</a>`;
+    }
+
+    return `<tr id="fj-row-${j.id}">
+      <td><div style="font-weight:500;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(j.title)}">${esc(j.title)}</div>
+          <div style="font-size:10.5px;color:var(--text3);margin-top:2px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(j.description||'')}">${esc((j.description||'').substring(0,80))}${j.description&&j.description.length>80?'…':''}</div></td>
+      <td style="color:var(--text2);white-space:nowrap;font-size:12px">${esc(j.company||'—')}</td>
+      <td style="font-size:11.5px;color:var(--text3);white-space:nowrap">${esc(j.location||'—')}</td>
+      <td><span class="rb ${rCls}">${rLabel}</span></td>
+      <td style="font-size:11.5px">${gLabel}</td>
+      <td style="font-size:11px;color:var(--text3)">${esc(j.portal||'—')}</td>
+      <td style="white-space:nowrap">${portalLinkCell}</td>
+      <td style="white-space:nowrap">${careersCell}</td>
+      <td style="white-space:nowrap;display:flex;gap:4px;align-items:center">
+        <button class="btn btn-xs" style="color:var(--gold2);border-color:var(--gold-bdr)" onclick="openJDModal('${j.id}','resume')" title="Build resume tailored to this job">CV</button>
+        <button class="btn btn-xs" style="color:var(--blue);border-color:var(--blue-bdr)" onclick="openJDModal('${j.id}','cover')" title="Write cover letter for this job">CL</button>
+        <button class="btn btn-xs" style="color:var(--green);border-color:var(--green-bdr)" onclick="addFoundJobToTracker('${j.id}')" title="Save to My Applications">+</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Click tracking — show "Did you apply?" on return ──────────
+const pendingApply = {};
+function trackJobClick(id){
+  pendingApply[id] = true;
+  // Check after a delay — if user comes back to this tab
+  setTimeout(()=>{
+    if(pendingApply[id] && document.getElementById('s-search').classList.contains('act')){
+      showApplyPrompt(id);
+    }
+  }, 8000); // 8 sec — enough time to glance at the job
+  // Also on next show() call to this section
+}
+
+function checkPendingApply(){
+  const ids = Object.keys(pendingApply).filter(id=>pendingApply[id]);
+  if(ids.length) showApplyPrompt(ids[0]);
+}
+
+function showApplyPrompt(id){
+  const job = foundJobs.find(j=>j.id===id);
+  if(!job || job.applied) { delete pendingApply[id]; return; }
+  delete pendingApply[id];
+
+  // Show inline prompt in the row
+  const row = document.getElementById('fj-row-'+id);
+  if(!row) return;
+
+  // Insert a highlighted prompt row after
+  const existingPrompt = document.getElementById('apply-prompt-'+id);
+  if(existingPrompt) return;
+
+  const prompt = document.createElement('tr');
+  prompt.id = 'apply-prompt-'+id;
+  prompt.innerHTML = `<td colspan="9" style="background:var(--gold-bg);border:1px solid var(--gold-bdr);border-radius:var(--r);padding:10px 14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span style="font-size:12.5px;color:var(--gold2)">✦ Did you apply for <strong>${esc(job.title)}</strong> at <strong>${esc(job.company||'')}</strong>?</span>
+      <div style="display:flex;gap:7px">
+        <button class="btn btn-sm btn-gold" onclick="markJobApplied('${id}')">Yes, I Applied</button>
+        <button class="btn btn-sm" onclick="keepJob('${id}')">No, Keep It Here</button>
+      </div>
+    </div>
+  </td>`;
+  row.after(prompt);
+}
+
+function markJobApplied(id){
+  const job = foundJobs.find(j=>j.id===id);
+  if(!job) return;
+  job.applied = true;
+  localStorage.setItem('cb_found_jobs', JSON.stringify(foundJobs));
+
+  // Add to My Applications tracker
+  const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  const newJob = {
+    id: Date.now().toString(),
+    title: job.title, company: job.company||'', location: job.location||'',
+    region: job.region||'germany', source: job.portal||'', status: 'applied',
+    date: today, url: job.portal_url||'', careers: job.careers_url||'',
+    salary:'', notes:'Added from Find Jobs', skillMatch:null, german:job.german||'', jd:''
+  };
+  jobs.unshift(newJob); saveJobs();
+
+  // Remove from UI
+  document.getElementById('fj-row-'+id)?.remove();
+  document.getElementById('apply-prompt-'+id)?.remove();
+  updateStats();
+  document.getElementById('tracker-count').textContent = jobs.length;
+
+  // Show confirmation
+  const msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--green-bg);border:1px solid var(--green-bdr);color:var(--green);padding:12px 18px;border-radius:var(--r);font-size:13px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.3)';
+  msg.textContent = '✓ Moved to My Applications';
+  document.body.appendChild(msg);
+  setTimeout(()=>msg.remove(), 3000);
+}
+
+function keepJob(id){
+  document.getElementById('apply-prompt-'+id)?.remove();
+}
+
+function addFoundJobToTracker(id){
+  const job = foundJobs.find(j=>j.id===id);
+  if(!job) return;
+  const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  jobs.unshift({
+    id:Date.now().toString(), title:job.title, company:job.company||'',
+    location:job.location||'', region:job.region||'germany', source:job.portal||'',
+    status:'saved', date:today, url:job.portal_url||'', careers:job.careers_url||'',
+    salary:'', notes:'', skillMatch:null, german:job.german||'', jd:''
+  });
+  saveJobs(); renderJobs(); updateStats();
+  document.getElementById('tracker-count').textContent = jobs.length;
+  const btn = event.currentTarget;
+  btn.textContent='✓'; btn.style.color='var(--green)';
+  setTimeout(()=>{btn.textContent='+';btn.style.color='';},2000);
+}
+
+// ── JD Fetch Modal — open job URL, paste full JD, then build ──
+let _jdModalJob = null, _jdModalType = null;
+
+function openJDModal(jobId, type){
+  const job = foundJobs.find(j=>j.id===jobId);
+  if(!job) return;
+  _jdModalJob = job;
+  _jdModalType = type;
+
+  document.getElementById('jd-fetch-subtitle').textContent =
+    'Building ' + (type==='resume'?'Resume':'Cover Letter') + ' for: ' + job.title + ' @ ' + (job.company||'');
+
+  // Build open links — portal first, then careers
+  const links = [];
+  if(job.portal_url) {
+    const pName = (job.portal||'').toLowerCase();
+    let pLabel = 'Open on ' + (job.portal||'Portal');
+    if(pName.includes('linkedin'))       pLabel = 'Open on LinkedIn ↗';
+    else if(pName.includes('xing'))      pLabel = 'Open on XING ↗';
+    else if(pName.includes('stepstone')) pLabel = 'Open on StepStone ↗';
+    else if(pName.includes('indeed'))    pLabel = 'Open on Indeed ↗';
+    else if(pName.includes('bayt'))      pLabel = 'Open on Bayt ↗';
+    else if(pName.includes('naukri'))    pLabel = 'Open on NaukriGulf ↗';
+    else if(pName.includes('gulf'))      pLabel = 'Open on GulfTalent ↗';
+    links.push({label: pLabel, url: job.portal_url, color:'var(--blue)'});
+  }
+  if(job.careers_url) links.push({label:'Open Company Careers ↗', url:job.careers_url, color:'var(--green)'});
+
+  document.getElementById('jd-fetch-links').innerHTML = links.map(l=>
+    `<a href="${esc(l.url)}" target="_blank" class="btn btn-sm" style="color:${l.color};border-color:${l.color};text-decoration:none">${l.label}</a>`
+  ).join('') + (links.length===0?'<span style="font-size:12px;color:var(--text3)">No direct URL available — search manually on the portal</span>':'');
+
+  // Pre-fill with AI description as placeholder hint
+  const ta = document.getElementById('jd-fetch-text');
+  ta.value = '';
+  ta.placeholder = job.description
+    ? 'AI summary: "' + job.description + '"\n\nPaste the full job description from the listing page here for best results…'
+    : 'Paste the complete job description from the job listing page…';
+
+  document.getElementById('jd-fetch-wordcount').textContent = '0 words';
+  document.getElementById('jd-fetch-modal').classList.add('show');
+  setTimeout(()=>ta.focus(), 200);
+}
+
+function closeJDModal(){
+  document.getElementById('jd-fetch-modal').classList.remove('show');
+  _jdModalJob = null; _jdModalType = null;
+}
+
+document.getElementById('jd-fetch-modal').addEventListener('click', function(e){ if(e.target===this) closeJDModal(); });
+
+document.getElementById('jd-fetch-text').addEventListener('input', function(){
+  const words = this.value.trim().split(/\s+/).filter(Boolean).length;
+  const el = document.getElementById('jd-fetch-wordcount');
+  el.textContent = words + ' words';
+  el.style.color = words >= 100 ? 'var(--green)' : words >= 30 ? 'var(--gold)' : 'var(--red)';
+});
+
+function confirmJDAndBuild(){
+  const job = _jdModalJob;
+  const type = _jdModalType;
+  if(!job) return;
+
+  let jdText = document.getElementById('jd-fetch-text').value.trim();
+  // If user didn't paste anything, fall back to AI summary
+  if(!jdText && job.description){
+    jdText = [
+      'Job Title: ' + job.title,
+      'Company: ' + (job.company||''),
+      'Location: ' + (job.location||''),
+      'Description: ' + job.description
+    ].join('\n');
+  } else if(!jdText){
+    jdText = 'Job Title: ' + job.title + '\nCompany: ' + (job.company||'') + '\nLocation: ' + (job.location||'');
+  }
+
+  closeJDModal();
+
+  if(type==='resume'){
+    document.getElementById('res-jd').value = jdText;
+    document.getElementById('res-out-card').style.display='none';
+    show('resume', document.getElementById('ni-resume'));
+    setTimeout(()=>document.getElementById('res-btn').scrollIntoView({behavior:'smooth', block:'center'}),300);
+  } else {
+    document.getElementById('cl-jd').value = jdText;
+    document.getElementById('cl-co').value = job.company||'';
+    document.getElementById('cl-out-card').style.display='none';
+    show('cover', document.getElementById('ni-cover'));
+    setTimeout(()=>document.getElementById('cl-btn').scrollIntoView({behavior:'smooth', block:'center'}),300);
+  }
+}
+
+// ── Build Resume or Cover Letter for a specific found job (legacy fallback) ──
+function buildForJob(jobId, type){
+  openJDModal(jobId, type);
+}
+
+// ── Styled Resume Preview (HTML → Print → PDF) ─────────────────
+function openResumePreview(){
+  const rawText = document.getElementById('res-out').textContent.trim();
+  if(!rawText || rawText === 'Generating…') { alert('Generate a resume first.'); return; }
+  const html = formatResumeAsHTML(rawText, profile);
+  document.getElementById('resume-print-area').innerHTML = html;
+  document.getElementById('resume-preview-modal').classList.add('show');
+}
+
+function closeResumePreview(){
+  document.getElementById('resume-preview-modal').classList.remove('show');
+}
+
+document.getElementById('resume-preview-modal').addEventListener('click', function(e){ if(e.target===this) closeResumePreview(); });
+
+function printResume(){
+  const content = document.getElementById('resume-print-area').innerHTML;
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Resume — ${esc(profile.name||'')}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;color:#111;background:#fff;padding:0}
+  .page{max-width:720px;margin:0 auto;padding:36px 44px}
+  h1{font-size:22pt;font-weight:700;letter-spacing:0.01em;color:#0a0a0a;margin-bottom:2px}
+  .contact-row{font-size:9pt;color:#444;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:6px 16px}
+  .contact-row a{color:#1a4a8a;text-decoration:none}
+  h2{font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#1a1a1a;border-bottom:1.5px solid #222;padding-bottom:3px;margin:18px 0 8px}
+  h3{font-size:10.5pt;font-weight:700;color:#0a0a0a;margin-bottom:1px}
+  .role-line{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+  .company{font-style:italic;color:#333;font-size:10pt}
+  .dates{font-size:9.5pt;color:#555;white-space:nowrap}
+  ul{margin:4px 0 10px 18px}
+  li{margin-bottom:3px;font-size:10pt;line-height:1.5}
+  p{font-size:10pt;line-height:1.6;margin-bottom:10px}
+  .skill-list{display:flex;flex-wrap:wrap;gap:4px 10px;margin-bottom:4px}
+  .skill{font-size:9.5pt;color:#222}
+  .skill::after{content:' ·';color:#aaa}
+  .skill:last-child::after{content:''}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+  @media print{
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .page{padding:0}
+    h2{page-break-after:avoid}
+  }
+</style></head><body><div class="page">${content}</div></body></html>`);
+  win.document.close();
+  setTimeout(()=>win.print(), 400);
+}
+
+function formatResumeAsHTML(rawText, prof){
+  // Parse the plain text resume into structured HTML
+  const lines = rawText.split('\n');
+  let html = '';
+  let inList = false;
+  let skipFirst = false;
+
+  // Header from profile
+  const name = prof.name || extractNameFromText(lines);
+  const email = prof.email||''; const phone = prof.phone||'';
+  const location = prof.location||''; const linkedin = prof.linkedin||''; const portfolio = prof.portfolio||'';
+
+  html += `<h1>${esc(name)}</h1>`;
+  html += `<div class="contact-row">`;
+  if(email) html += `<span><a href="mailto:${esc(email)}">${esc(email)}</a></span>`;
+  if(phone) html += `<span>${esc(phone)}</span>`;
+  if(location) html += `<span>${esc(location)}</span>`;
+  if(linkedin) html += `<span><a href="${esc(linkedin)}" target="_blank">LinkedIn</a></span>`;
+  if(portfolio) html += `<span><a href="${esc(portfolio)}" target="_blank">Portfolio</a></span>`;
+  html += `</div>`;
+
+  // Parse sections from text
+  for(let i=0; i<lines.length; i++){
+    const line = lines[i];
+    const trimmed = line.trim();
+    if(!trimmed) {
+      if(inList){ html += '</ul>'; inList=false; }
+      continue;
+    }
+
+    // Skip lines that are just the person's name at the top (AI often repeats it)
+    if(i < 3 && trimmed.toLowerCase() === (name||'').toLowerCase()) continue;
+
+    // Section heading detection: ALL CAPS or ends with colon and short
+    const isHeading = /^[A-Z][A-Z\s&\/\-]{3,}$/.test(trimmed) ||
+                      (/^[A-Z][\w\s&\/\-]{2,25}:$/.test(trimmed) && trimmed.length < 35);
+    if(isHeading){
+      if(inList){ html += '</ul>'; inList=false; }
+      html += `<h2>${esc(trimmed.replace(/:$/,''))}</h2>`;
+      continue;
+    }
+
+    // Bullet / list item
+    if(/^[-•·▪*]\s/.test(trimmed)){
+      if(!inList){ html += '<ul>'; inList=true; }
+      html += `<li>${esc(trimmed.replace(/^[-•·▪*]\s+/,''))}</li>`;
+      continue;
+    }
+
+    // Role + dates line (contains | or — with years)
+    if(/\b(20\d\d|19\d\d|Present|current)\b/i.test(trimmed) && trimmed.length < 100){
+      if(inList){ html += '</ul>'; inList=false; }
+      const parts = trimmed.split(/\s*[|–—]\s*/);
+      if(parts.length >= 2){
+        const last = parts[parts.length-1];
+        const isDate = /\b(20\d\d|19\d\d|Present|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/i.test(last);
+        if(isDate){
+          const role = parts.slice(0,-1).join(' · ');
+          html += `<div class="role-line"><div><h3>${esc(parts[0])}</h3>${parts.length>2?'<span class="company">'+esc(parts.slice(1,-1).join(' · '))+'</span>':''}</div><span class="dates">${esc(last)}</span></div>`;
+        } else {
+          html += `<p>${esc(trimmed)}</p>`;
+        }
+      } else {
+        html += `<p>${esc(trimmed)}</p>`;
+      }
+      continue;
+    }
+
+    // Skills line (comma separated, short items)
+    if(trimmed.includes(',') && trimmed.split(',').length >= 4 && !trimmed.includes('.')){
+      if(inList){ html += '</ul>'; inList=false; }
+      const skills = trimmed.split(',').map(s=>s.trim()).filter(Boolean);
+      html += `<div class="skill-list">${skills.map(s=>`<span class="skill">${esc(s)}</span>`).join('')}</div>`;
+      continue;
+    }
+
+    // Plain paragraph
+    if(inList){ html += '</ul>'; inList=false; }
+    html += `<p>${esc(trimmed)}</p>`;
+  }
+  if(inList) html += '</ul>';
+  return html;
+}
+
+function extractNameFromText(lines){
+  // First non-empty line is usually the name
+  for(const l of lines){ const t=l.trim(); if(t && t.length>2 && t.length<50 && !/^[-•]/.test(t)) return t; }
+  return '';
+}
+
+
+// Load cached found jobs on init
+function loadFoundJobs(){
+  const saved = localStorage.getItem('cb_found_jobs');
+  if(saved){ try{ foundJobs=JSON.parse(saved); if(foundJobs.length){ populatePortalFilter(); applyJobFilters(); document.getElementById('search-badge').style.display='inline'; document.getElementById('job-filters').style.display='flex'; } }catch(e){} }
+}
+
+
+// ── Job Tracker ────────────────────────────────────────────────
+const STATUS_META={
+  saved:{label:'💾 Saved',cls:'sb-saved',order:0},
+  applied:{label:'📤 Applied',cls:'sb-applied',order:1},
+  screen:{label:'📞 Screen',cls:'sb-screen',order:2},
+  interview:{label:'🎯 Interview',cls:'sb-interview',order:3},
+  offer:{label:'🎉 Offer',cls:'sb-offer',order:4},
+  rejected:{label:'❌ Rejected',cls:'sb-rejected',order:5}
+};
+const REGION_ORDER={munich:0,germany:1,europe:2,dubai:3};
+
+function saveJobs(){localStorage.setItem(K_JOBS,JSON.stringify(jobs));}
+
+function parseDate(d){
+  if(!d) return 0;
+  const t=new Date(d).getTime();
+  return isNaN(t)?0:t;
+}
+
+function applyFilters(){
+  const fStatus=document.getElementById('f-status').value;
+  const fRegion=document.getElementById('f-region').value;
+  const fGerman=document.getElementById('f-german').value;
+  const fSkill=document.getElementById('f-skill').value;
+  const fSort=document.getElementById('f-sort').value;
+
+  let filtered=jobs.filter(j=>{
+    if(fStatus&&j.status!==fStatus) return false;
+    if(fRegion&&j.region!==fRegion) return false;
+    if(fGerman&&j.german!==fGerman) return false;
+    if(fSkill){
+      const pct=parseInt(j.skillMatch)||0;
+      if(fSkill==='high'&&pct<70) return false;
+      if(fSkill==='mid'&&pct<40) return false;
+      if(fSkill==='low'&&pct>=40) return false;
+    }
+    return true;
+  });
+
+  // Sort
+  filtered.sort((a,b)=>{
+    if(fSort==='date_asc') return parseDate(a.date)-parseDate(b.date);
+    if(fSort==='skill_desc') return (parseInt(b.skillMatch)||0)-(parseInt(a.skillMatch)||0);
+    if(fSort==='status') return (STATUS_META[a.status]?.order||0)-(STATUS_META[b.status]?.order||0);
+    if(fSort==='region') return (REGION_ORDER[a.region]||99)-(REGION_ORDER[b.region]||99);
+    return parseDate(b.date)-parseDate(a.date); // date_desc default
+  });
+
+  renderJobsFiltered(filtered);
+  updateStats();
+}
+
+function renderJobs(){applyFilters();}
+
+function renderJobsFiltered(filtered){
+  const tbody=document.getElementById('jobs-tbody');
+  if(!filtered.length){
+    tbody.innerHTML=`<tr><td colspan="12" class="tbl-empty">No jobs match the current filters</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=filtered.map(j=>jobRow(j)).join('');
+  document.getElementById('tracker-count').textContent=jobs.length;
+}
+
+function jobRow(j){
+  const m=STATUS_META[j.status]||STATUS_META.saved;
+  const rLabels={munich:'🟣 Munich',germany:'🟡 Germany',europe:'🔵 Europe',dubai:'🟢 Dubai'};
+  const rCls={munich:'rb-munich',germany:'rb-germany',europe:'rb-europe',dubai:'rb-dubai'};
+  const regionBadge=j.region?`<span class="rb ${rCls[j.region]||''}">${rLabels[j.region]||j.region}</span>`:'—';
+  const gLabels={required:'🔴 Req.',preferred:'🟡 Pref.',not_required:'🟢 No','':`<span style="color:var(--text3)">—</span>`};
+  const germanCell=gLabels[j.german||'']||'—';
+  const sm=j.skillMatch?parseInt(j.skillMatch):null;
+  const smHtml=sm!==null?`<span class="${sm>=70?'sm-high':sm>=40?'sm-mid':'sm-low'}">${sm}%</span>`:`<span class="sm-none">—</span>`;
+  return `<tr>
+    <td style="font-size:11px;color:var(--text3);white-space:nowrap">${j.date||'—'}</td>
+    <td><div class="td-title" title="${esc(j.title)}">${esc(j.title)}</div></td>
+    <td style="color:var(--text2);white-space:nowrap;font-size:12px">${esc(j.company||'—')}</td>
+    <td>${regionBadge}</td>
+    <td style="color:var(--text3);font-size:11px">${esc(j.source||'—')}</td>
+    <td><span class="sb ${m.cls}" style="cursor:pointer" onclick="cycleStatus('${j.id}')" title="Click to advance status">${m.label}</span></td>
+    <td style="font-size:11.5px">${germanCell}</td>
+    <td class="td-sm">${smHtml}</td>
+    <td style="font-size:11.5px;color:var(--text2);white-space:nowrap">${esc(j.salary||'—')}</td>
+    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;color:var(--text2)" title="${esc(j.notes||'')}">${esc(j.notes||'—')}</td>
+    <td style="white-space:nowrap">
+      ${j.url?`<a href="${j.url}" target="_blank" style="font-size:11px;color:var(--gold);text-decoration:none;margin-right:5px">Job ↗</a>`:''}
+      ${j.careers?`<a href="${j.careers}" target="_blank" style="font-size:11px;color:var(--green);text-decoration:none">Direct ↗</a>`:''}
+    </td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-xs" onclick="openEdit('${j.id}')" style="margin-right:3px">Edit</button>
+      <button class="btn btn-xs" onclick="deleteJob('${j.id}')" style="border-color:var(--red-bdr);color:var(--red)">Del</button>
+    </td>
+  </tr>`;
+}
+
+function updateStats(){
+  const counts={saved:0,applied:0,screen:0,interview:0,offer:0,rejected:0};
+  jobs.forEach(j=>counts[j.status]=(counts[j.status]||0)+1);
+  document.getElementById('st-total').textContent=jobs.length;
+  document.getElementById('st-saved').textContent=counts.saved;
+  document.getElementById('st-applied').textContent=counts.applied;
+  document.getElementById('st-interview').textContent=(counts.interview||0)+(counts.screen||0);
+  document.getElementById('st-offer').textContent=counts.offer;
+  document.getElementById('st-rejected').textContent=counts.rejected;
+}
+
+function clearFilters(){
+  ['f-status','f-region','f-german','f-skill'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-sort').value='date_desc';
+  applyFilters();
+}
+
+function saveJob(){
+  const title=document.getElementById('aj-title').value.trim();
+  if(!title){alert('Job title is required.');return;}
+  const jd=document.getElementById('aj-jd').value;
+  const sm=calcSkillMatch(jd);
+  const gd=document.getElementById('aj-german-preview').dataset.val||detectGerman(jd);
+  const job={
+    id:Date.now().toString(),title,
+    company:document.getElementById('aj-company').value.trim(),
+    location:document.getElementById('aj-location').value.trim(),
+    region:document.getElementById('aj-region').value,
+    source:document.getElementById('aj-source').value.trim(),
+    status:document.getElementById('aj-status').value,
+    date:document.getElementById('aj-date').value.trim()||new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+    url:document.getElementById('aj-url').value.trim(),
+    careers:document.getElementById('aj-careers').value.trim(),
+    salary:document.getElementById('aj-salary').value.trim(),
+    notes:document.getElementById('aj-notes').value.trim(),
+    skillMatch:sm?sm.pct:null,
+    german:gd,
+    jd:jd
+  };
+  jobs.unshift(job);saveJobs();renderJobs();closeAddModal();
+}
+
+function deleteJob(id){
+  if(!confirm('Remove this job?'))return;
+  jobs=jobs.filter(j=>j.id!==id);saveJobs();renderJobs();
+}
+
+function cycleStatus(id){
+  const order=['saved','applied','screen','interview','offer','rejected'];
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  j.status=order[(order.indexOf(j.status)+1)%order.length];
+  saveJobs();renderJobs();
+}
+
+function openEdit(id){
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  document.getElementById('ej-id').value=j.id;
+  document.getElementById('ej-title').value=j.title;
+  document.getElementById('ej-company').value=j.company||'';
+  document.getElementById('ej-location').value=j.location||'';
+  document.getElementById('ej-region').value=j.region||'germany';
+  document.getElementById('ej-source').value=j.source||'';
+  document.getElementById('ej-status').value=j.status||'saved';
+  document.getElementById('ej-date').value=j.date||'';
+  document.getElementById('ej-url').value=j.url||'';
+  document.getElementById('ej-careers').value=j.careers||'';
+  document.getElementById('ej-salary').value=j.salary||'';
+  document.getElementById('ej-notes').value=j.notes||'';
+  document.getElementById('ej-german').value=j.german||'';
+  document.getElementById('ej-skill').value=j.skillMatch||'';
+  document.getElementById('edit-modal').classList.add('show');
+}
+
+function updateJob(){
+  const id=document.getElementById('ej-id').value;
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  j.title=document.getElementById('ej-title').value.trim();
+  j.company=document.getElementById('ej-company').value.trim();
+  j.location=document.getElementById('ej-location').value.trim();
+  j.region=document.getElementById('ej-region').value;
+  j.source=document.getElementById('ej-source').value.trim();
+  j.status=document.getElementById('ej-status').value;
+  j.date=document.getElementById('ej-date').value.trim();
+  j.url=document.getElementById('ej-url').value.trim();
+  j.careers=document.getElementById('ej-careers').value.trim();
+  j.salary=document.getElementById('ej-salary').value.trim();
+  j.notes=document.getElementById('ej-notes').value.trim();
+  j.german=document.getElementById('ej-german').value;
+  j.skillMatch=document.getElementById('ej-skill').value||null;
+  saveJobs();renderJobs();closeEditModal();
+}
+
+function closeAddModal(){
+  document.getElementById('add-modal').classList.remove('show');
+  ['aj-title','aj-company','aj-location','aj-source','aj-date','aj-url','aj-careers','aj-salary','aj-notes','aj-jd'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('aj-status').value='saved';
+  document.getElementById('aj-region').value='munich';
+  document.getElementById('aj-skill-preview').textContent='—';
+  document.getElementById('aj-skill-detail').textContent='';
+  document.getElementById('aj-german-preview').textContent='—';
+  delete document.getElementById('aj-german-preview').dataset.val;
+}
+function closeEditModal(){document.getElementById('edit-modal').classList.remove('show');}
+
+// ── Resume & Cover ─────────────────────────────────────────────
+// ── Central Gemini API caller (completely free) ──────────────
+function getGeminiKey(){
+  return localStorage.getItem('cb_gemini_key') || document.getElementById('gemini-key')?.value || '';
+}
+function saveApiKey(){
+  const v = document.getElementById('gemini-key').value.trim();
+  if(v) localStorage.setItem('cb_gemini_key', v);
+}
+function loadApiKey(){
+  const k = localStorage.getItem('cb_gemini_key');
+  if(k){ const el=document.getElementById('gemini-key'); if(el) el.value=k; }
+}
+
+async function callGemini(parts, maxTokens){
+  const key = getGeminiKey();
+  if(!key){
+    alert('Please paste your free Gemini API key in the top-right box.\n\nGet one free (no credit card) at:\nhttps://aistudio.google.com/apikey');
+    throw new Error('No API key');
+  }
+  // parts = array of {text:...} or {inlineData:{mimeType,data}} objects
+  // CHANGED: Using gemini-2.0-flash to prevent 404 Not Found errors on the free tier.
+  const resp = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' + encodeURIComponent(key),
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: { maxOutputTokens: maxTokens || 2000, temperature: 0.4 }
+      })
+    }
+  );
+  if(!resp.ok){
+    const e = await resp.text().catch(()=>'{}');
+    let msg = 'Gemini API error ' + resp.status;
+    try{
+      const j = JSON.parse(e);
+      const code = j?.error?.code;
+      const detail = j?.error?.message||'';
+      if(code===429){
+        msg = 'Rate limit hit (429). Free quota: 1,000 requests/day. Wait a minute and try again, or check your key at aistudio.google.com/apikey';
+      } else if(code===400){
+        msg = 'Invalid request (400): ' + detail.substring(0,120);
+      } else if(code===403){
+        msg = 'API key rejected (403) — double-check your key at aistudio.google.com/apikey';
+      } else {
+        msg = 'Gemini error ' + code + ': ' + detail.substring(0,120);
+      }
+    }catch(pe){ msg += ': ' + e.substring(0,120); }
+    throw new Error(msg);
+  }
+  const d = await resp.json();
+  if(d.error) throw new Error('Gemini: ' + d.error.message);
+  return (d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+}
+
+async function aiCall(system, msg, outId, btnId, icId){
+  const btn=document.getElementById(btnId), ic=document.getElementById(icId);
+  btn.disabled=true; ic.innerHTML='<span class="spinner"></span>';
+  const cardId = outId.includes('res-out') ? 'res-out-card' : outId.includes('cl-out') ? 'cl-out-card' : null;
+  if(cardId) document.getElementById(cardId).style.display='block';
+  document.getElementById(outId).textContent='Generating…';
+  try{
+    const text = await callGemini([{text: system + '\n\n' + msg}], 2000);
+    document.getElementById(outId).textContent = text;
+  }catch(e){
+    const isKeyErr = e.message==='No API key';
+    const is429 = e.message && e.message.includes('429');
+    const el = document.getElementById(outId);
+    el.style.color = 'var(--amber)';
+    if(isKeyErr){
+      el.textContent = '⚠ Please paste your free Gemini API key in the box at the top-right of the page.';
+    } else if(is429){
+      el.textContent = '⚠ ' + e.message;
+    } else {
+      el.textContent = '✕ ' + e.message;
+    }
+  }finally{ btn.disabled=false; ic.textContent='✦'; }
+}
+
+function genResume(){
+  const jd=document.getElementById('res-jd').value.trim();
+  if(!jd){alert('Paste a job description first.');return;}
+  const fmt=document.getElementById('res-fmt').value;
+  const tone=document.getElementById('res-tone').value;
+  const fmtMap={german:'German Lebenslauf (Persönliche Angaben, Berufserfahrung, Ausbildung, Kenntnisse)',european:'European Europass CV',international:'International ATS-optimised (Summary, Core Skills, Experience, Education)'};
+  const toneMap={professional:'Formal corporate',dynamic:'Dynamic action verbs with quantified impact',technical:'Technical depth-first'};
+  document.getElementById('res-out-card').style.display='block';
+  aiCall(`Expert resume writer for German/European market. Format: ${fmtMap[fmt]}. Tone: ${toneMap[tone]}. Mirror job keywords exactly. Output resume only.`,
+    `Job:\n${jd}\n\nCandidate:\n${buildProfileStr()}`,'res-out','res-btn','res-ic');
+}
+
+function genCL(){
+  const jd=document.getElementById('cl-jd').value.trim();
+  if(!jd){alert('Paste a job description first.');return;}
+  const co=document.getElementById('cl-co').value||'the company';
+  const mgr=document.getElementById('cl-mgr').value;
+  const why=document.getElementById('cl-why').value;
+  const toneMap={formal:'highly formal German business style',professional:'professional and engaging',enthusiastic:'enthusiastic and passionate'};
+  const lenMap={concise:'3 paragraphs',standard:'4–5 paragraphs',detailed:'6+ paragraphs'};
+  document.getElementById('cl-out-card').style.display='block';
+  aiCall(`Expert cover letter writer for German/European market. Tone: ${toneMap[document.getElementById('cl-tone').value]}. Length: ${lenMap[document.getElementById('cl-len').value]}. Output letter only.`,
+    `Job: ${jd}\nCompany: ${co}\n${mgr?'Manager: '+mgr:''}\n${why?'Why: '+why:''}\nSalutation: "${mgr?'Dear '+mgr+',':'Dear Hiring Team,'}"\n\nCandidate:\n${buildProfileStr()}`,'cl-out','cl-btn','cl-ic');
+}
+
+// ── Navigation ─────────────────────────────────────────────────
+const TB={
+  profile:['My Profile','Upload resume or fill manually — auto-saved on this device'],
+  search:['Find Jobs','AI-matched portal links — Munich first, then Germany, Europe, Dubai'],
+  portals:['All Portals','Complete directory — Germany, Europe & Dubai'],
+  tracker:['My Applications','Sorted by latest first — filter by region, status, German, skill match'],
+  resume:['Resume Builder','ATS-optimised resume tailored to any job description'],
+  cover:['Cover Letter','Personalised letter that passes ATS and wins interviews']
+};
+
+function show(sec,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('act'));
+  document.getElementById('s-'+sec).classList.add('act');
+  if(el&&el.classList)el.classList.add('act');
+  const t=TB[sec]||['',''];
+  document.getElementById('tb-title').textContent=t[0];
+  document.getElementById('tb-sub').textContent=t[1];
+  document.getElementById('top-add-btn').style.display=sec==='tracker'?'inline-flex':'none';
+  if(sec==='search'){
+    const hasProfile=profile.skills.length||profile.summary;
+    document.getElementById('search-needs-profile').style.display=hasProfile?'none':'block';
+    checkPendingApply();
+  }
+}
+
+// ── Utilities ──────────────────────────────────────────────────
+function copyEl(id){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
+    const b=event.currentTarget;b.textContent='✓ Copied';setTimeout(()=>b.textContent='Copy',2000);
+  });
+}
+function dlEl(id,fn){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([document.getElementById(id).textContent],{type:'text/plain'}));
+  a.download=fn;a.click();
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toggleSort(col){applyFilters();}
+
+document.getElementById('add-modal').addEventListener('click',function(e){if(e.target===this)closeAddModal();});
+document.getElementById('edit-modal').addEventListener('click',function(e){if(e.target===this)closeEditModal();});
+
+init();
+</script>
+</body>
+</html>
