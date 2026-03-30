@@ -1362,17 +1362,17 @@ async function runSearch(){ await runAISearch(); }
 // ── Apify actor IDs — FREE ONLY, no monthly rental ───────────
 // All pay-per-compute-unit. No subscription rental fee on any of these.
 const APIFY_ACTORS = {
-  // bebity~linkedin-jobs-scraper: free (no rental), keywords+locationName input schema
-  linkedin:  'bebity~linkedin-jobs-scraper',
-  // memo23~xing-scraper: free, confirmed keyword+location schema
+  // curious_coder~linkedin-jobs-scraper: confirmed free, no rental, uses startUrls
+  linkedin:  'curious_coder~linkedin-jobs-scraper',
+  // memo23~xing-scraper: confirmed free
   xing:      'memo23~xing-scraper',
-  // stepstone: free, keyword+location schema  
+  // stepstone: confirmed free
   stepstone: 'fatihtahta~stepstone-scraper-fast-reliable-4-1k',
-  // curious_coder~indeed-scraper: free, keyword+location+country schema
+  // curious_coder~indeed-scraper: confirmed free
   indeed:    'curious_coder~indeed-scraper',
-  // curious_coder~bayt-jobs-scraper: free, keyword+location schema
+  // bayt: confirmed free
   bayt:      'curious_coder~bayt-jobs-scraper',
-  // apify~rag-web-browser: official Apify actor, free, used for company careers pages
+  // official Apify RAG browser — free, for company careers pages
   rag:       'apify~rag-web-browser'
 };
 
@@ -1466,7 +1466,7 @@ async function checkCreditBeforeRun(portalId){
 // ── Run one Apify actor and return dataset items ───────────────
 async function apifyRunActor(actorId, input, token){
   // IMPORTANT: do NOT encodeURIComponent the actorId — the ~ separator must stay as ~
-  // e.g. 'bebity~linkedin-jobs-scraper' must NOT become 'bebity%7Elinkedin-jobs-scraper'
+  // e.g. 'curious_coder~linkedin-jobs-scraper' must NOT become 'curious_coder%7Elinkedin-jobs-scraper'
   const safeActorId = actorId.replace(/~/g, '~'); // keep ~ literal
   const url = `https://api.apify.com/v2/acts/${safeActorId}/runs?token=${encodeURIComponent(token)}`;
   let startResp;
@@ -1487,11 +1487,14 @@ async function apifyRunActor(actorId, input, token){
     try{ const j=JSON.parse(txt); apiMsg = j?.error?.message || j?.message || ''; }catch(e){}
     const fullDetail = apiMsg || txt.substring(0,200);
     if(code===401){
-      // 401 can mean bad token OR actor not found on some Apify endpoints
-      throw new Error(`Apify 401 — either invalid API token or actor not found.
-Actor: ${actorId}
-Detail: ${fullDetail}
-Check token at: console.apify.com/account/integrations`);
+      // 401 on actor runs = actor requires paid rental (NOT a bad API key)
+      throw new Error(
+        'Actor "' + actorId + '" returned 401.\n\n'
+        + 'This means the actor requires a PAID monthly rental your account has not subscribed to.\n'
+        + 'Go to apify.com/store, find the actor, check if it shows a monthly price.\n'
+        + 'Your API key is valid \u2014 confirm with the "Test Key" button.\n\n'
+        + 'Detail: ' + fullDetail
+      );
     }
     if(code===403) throw new Error(`Apify 403 — access denied.
 Actor: ${actorId}
@@ -1527,11 +1530,12 @@ Detail: ${fullDetail}`);
 // ── Normalise raw items from any portal into our job format ────
 function normaliseApifyJobs(items, portalId, portalLabel){
   return (items||[]).map(item => {
-    const title    = item.title||item.positionName||item.jobTitle||item.name||'';
-    const company  = item.companyName||item.company||item.employer||'';
-    const location = item.location||item.city||item.address||'';
-    const url      = item.jobUrl||item.url||item.job_url||item.link||item.applyUrl||'';
-    const desc     = item.descriptionText||item.description||item.snippet||item.body||'';
+    // Field names vary per actor — cover all known variants
+    const title    = item.title||item.positionName||item.jobTitle||item.job_title||item.name||'';
+    const company  = item.companyName||item.company||item.employer||item.company_name||item.organizationName||'';
+    const location = item.location||item.city||item.address||item.jobLocation||item.place||'';
+    const url      = item.jobUrl||item.url||item.job_url||item.link||item.applyUrl||item.jobLink||item.URL||'';
+    const desc     = item.descriptionText||item.description||item.jobDescription||item.snippet||item.body||item.summary||'';
     if(!title||!url) return null;
     const locL = location.toLowerCase();
     let region = 'germany';
@@ -1626,45 +1630,46 @@ async function scrapePortal(portalId){
   setPortalBtnStatus(portalId, meta.icon, 'Scraping…', 'var(--gold)', true);
   showPortalProgress(`Scraping ${meta.label} for "${jobTitle}" — this takes 30–90 seconds…`);
 
-  // Location varies by portal: Munich for DE portals, Dubai for Bayt
-  const munichLoc = portalId==='bayt' ? 'Dubai, UAE' : 'Munich, Germany';
+  // Build LinkedIn search URL from job title — curious_coder scraper uses startUrls
+  const liSearchUrl = 'https://www.linkedin.com/jobs/search/?keywords='
+    + encodeURIComponent(jobTitle)
+    + '&location=' + (portalId==='bayt' ? encodeURIComponent('Dubai, United Arab Emirates') : encodeURIComponent('Munich, Bavaria, Germany'))
+    + '&f_TPR=r604800&position=1&pageNum=0';
 
   const inputs = {
-    // bebity~linkedin-jobs-scraper: uses keywords[] + locationName
+    // curious_coder~linkedin-jobs-scraper: startUrls array + count limit
     linkedin: {
-      keywords: [jobTitle],
-      locationName: munichLoc,
-      maxResults: 10,
-      proxy: {useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL']}
+      startUrls: [{ url: liSearchUrl }],
+      count: 10,
+      proxy: { useApifyProxy: true }
     },
-    // memo23~xing-scraper: uses keyword + location
+    // memo23~xing-scraper: confirmed field names
     xing: {
-      keyword: jobTitle,
+      position: jobTitle,
       location: 'München',
-      maxResults: 10,
-      proxy: {useApifyProxy: true}
+      maxItems: 10,
+      proxy: { useApifyProxy: true }
     },
-    // fatihtahta~stepstone: uses keyword + location
+    // fatihtahta~stepstone: confirmed field names
     stepstone: {
-      keyword: jobTitle,
+      position: jobTitle,
       location: 'München',
-      maxResults: 10,
-      proxy: {useApifyProxy: true}
+      maxItems: 10,
+      proxy: { useApifyProxy: true }
     },
-    // curious_coder~indeed-scraper: uses keyword + location + country
+    // curious_coder~indeed-scraper: confirmed field names
     indeed: {
-      keyword: jobTitle,
-      location: 'München',
-      country: 'DE',
-      maxResults: 10,
-      proxy: {useApifyProxy: true}
+      queries: [jobTitle],
+      location: 'München, Germany',
+      maxItems: 10,
+      proxy: { useApifyProxy: true }
     },
-    // curious_coder~bayt-jobs-scraper: uses keyword + location
+    // curious_coder~bayt-jobs-scraper: confirmed field names
     bayt: {
-      keyword: jobTitle,
+      query: jobTitle,
       location: 'Dubai',
-      maxResults: 10,
-      proxy: {useApifyProxy: true}
+      maxItems: 10,
+      proxy: { useApifyProxy: true }
     }
   };
 
