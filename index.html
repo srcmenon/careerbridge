@@ -817,7 +817,7 @@ tr:hover td{background:rgba(255,255,255,0.013)}
   </div>
 </main>
 
-<!-- ── JD Fetch Modal ─────────────────────────────────────────── -->
+<!-- -- JD Fetch Modal ---- -->
 <div class="modal-bg" id="jd-fetch-modal">
   <div class="modal" style="width:620px">
     <div class="modal-t">Paste Full Job Description</div>
@@ -842,7 +842,7 @@ tr:hover td{background:rgba(255,255,255,0.013)}
   </div>
 </div>
 
-<!-- ── Styled Resume Preview Modal ───────────────────────────── -->
+<!-- -- Styled Resume Preview Modal ---- -->
 <div class="modal-bg" id="resume-preview-modal" style="z-index:600">
   <div style="background:var(--bg);border:1px solid var(--border2);border-radius:var(--rl);width:820px;max-width:96vw;max-height:94vh;display:flex;flex-direction:column">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--border)">
@@ -862,18 +862,18 @@ tr:hover td{background:rgba(255,255,255,0.013)}
 </div>
 
 <script>
-// ── Constants ──────────────────────────────────────────────────
+// -- Constants ----
 const K_NAME='cb_name',K_ROLE='cb_role',K_PROFILE='cb_profile',K_JOBS='cb_jobs',K_SEARCH='cb_search';
 
-// ── State ──────────────────────────────────────────────────────
+// -- State ----
 let profile={name:'',email:'',phone:'',location:'',linkedin:'',portfolio:'',summary:'',skills:[],langs:[],experiences:[],educations:[]};
 let jobs=[];
-let foundJobs=[]; // top-level — prevents ReferenceError in mergeFoundJobs
+let foundJobs=[]; // top-level -- prevents ReferenceError in mergeFoundJobs
 let saveTimer=null;
 let expCount=0,eduCount=0;
 let currentSort='date_desc';
 
-// ── Portal URL builders ────────────────────────────────────────
+// -- Portal URL builders ----
 const portals={
   munich:[
     {name:'Indeed Munich',flag:'🌐',build:(q)=>`https://de.indeed.com/jobs?q=${enc(q)}&l=M%C3%BCnchen%2C+Bayern`},
@@ -912,7 +912,7 @@ const portals={
 
 function enc(s){return encodeURIComponent(s||'');}
 
-// ── Init ───────────────────────────────────────────────────────
+// -- Init ----
 function init(){
   const name=localStorage.getItem(K_NAME);
   if(!name){document.getElementById('welcome').style.display='flex';return;}
@@ -957,7 +957,7 @@ function updateSidebar(){
   document.getElementById('u-avatar').textContent=(name.charAt(0)||'?').toUpperCase();
 }
 
-// ── Resume Upload ──────────────────────────────────────────────
+// -- Resume Upload ----
 function handleDrop(e){
   e.preventDefault();
   document.getElementById('upload-zone').classList.remove('drag');
@@ -965,12 +965,12 @@ function handleDrop(e){
   if(f) handleFileUpload(f);
 }
 
-// ── PDF → base64 using FileReader (correct browser API) ──
+// -- PDF → base64 using FileReader (correct browser API) --
 function readFileAsBase64(file){
   return new Promise((resolve, reject)=>{
     const reader = new FileReader();
     reader.onload = ()=>{
-      // result is "data:application/pdf;base64,XXXXXX" — split off the prefix
+      // result is "data:application/pdf;base64,XXXXXX" -- split off the prefix
       const b64 = reader.result.split(',')[1];
       resolve(b64);
     };
@@ -979,9 +979,9 @@ function readFileAsBase64(file){
   });
 }
 
-// ── Kept as stub so existing call sites don't break ──
+// -- Kept as stub so existing call sites don't break --
 async function extractPdfText(file, onProgress){
-  // This path is no longer used — PDF is sent directly to API as a document.
+  // This path is no longer used -- PDF is sent directly to API as a document.
   // Returning empty string causes the caller to fall into the API-document branch.
   if(onProgress) onProgress('Reading PDF…');
   let allText='';
@@ -1015,7 +1015,7 @@ async function extractPdfText(file, onProgress){
       const decompressed=await inflate(compressed.slice(offset));
       if(decompressed) allText+=extractFromStream(decompressed)+' ';
     } else {
-      // Plain/uncompressed stream — extract directly
+      // Plain/uncompressed stream -- extract directly
       allText+=extractFromStream(s.data)+' ';
     }
   }
@@ -1050,11 +1050,11 @@ async function handleFileUpload(file){
     let apiMessages;
 
     if(file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')){
-      // Send PDF directly to Anthropic API as a native document — most reliable approach
+      // Send PDF directly to Anthropic API as a native document -- most reliable approach
       parseStatus.textContent = 'Converting PDF to base64…';
       const b64 = await readFileAsBase64(file);
       parseStatus.textContent = 'Sending PDF to Gemini (free)…';
-      // Gemini uses inlineData for PDF — fully supported on free tier
+      // Gemini uses inlineData for PDF -- fully supported on free tier
       apiMessages = [
         { inlineData: { mimeType: 'application/pdf', data: b64 } },
         { text: INSTRUCTION }
@@ -1110,7 +1110,7 @@ async function handleFileUpload(file){
   }
 }
 
-// ── Profile JSON import/export ─────────────────────────────────
+// -- Profile JSON import/export ----
 function exportProfileJSON(){
   collectProfileFields();
   const json=JSON.stringify(profile,null,2);
@@ -1217,7 +1217,7 @@ function saveProfile(redirect=true){
   if(redirect){showSave('saved');setTimeout(()=>show('search',document.getElementById('ni-search')),400);}
 }
 
-// ── Tags ───────────────────────────────────────────────────────
+// -- Tags ----
 function addTag(ev,type,inputId){if(ev.key==='Enter'){ev.preventDefault();addTagBtn(type,inputId);}}
 function addTagBtn(type,inputId){
   const inp=document.getElementById(inputId);
@@ -1229,7 +1229,7 @@ function renderTags(type){
 }
 function removeTag(type,idx){profile[type].splice(idx,1);renderTags(type);autoSave();}
 
-// ── Experience / Education ─────────────────────────────────────
+// -- Experience / Education ----
 function addExp(){addExpFromData({});}
 function addExpFromData(data){
   const id=expCount++;
@@ -1256,24 +1256,24 @@ function addEduFromData(data){
     <button class="btn btn-xs" onclick="this.closest('[data-edu]').remove();autoSave()">Remove</button></div>
     <div class="gr2"><div class="field"><label>Degree</label><input type="text" id="edu-${id}-d" value="${esc(data.degree||'')}" oninput="autoSave()" placeholder="M.Sc. Computer Science"></div>
     <div class="field"><label>Institution</label><input type="text" id="edu-${id}-i" value="${esc(data.inst||'')}" oninput="autoSave()" placeholder="TU Munich"></div></div>
-    <div class="gr2"><div class="field"><label>Year</label><input type="text" id="edu-${id}-y" value="${esc(data.year||'')}" oninput="autoSave()" placeholder="2018–2020"></div>
+    <div class="gr2"><div class="field"><label>Year</label><input type="text" id="edu-${id}-y" value="${esc(data.year||'')}" oninput="autoSave()" placeholder="2018-2020"></div>
     <div class="field"><label>Grade</label><input type="text" id="edu-${id}-g" value="${esc(data.grade||'')}" oninput="autoSave()" placeholder="1.5 / GPA 3.8"></div></div>`;
   document.getElementById('edu-list').appendChild(div);
 }
 
-// ── Build profile string ───────────────────────────────────────
+// -- Build profile string ----
 function buildProfileStr(){
   collectProfileFields();
   let s=`NAME: ${profile.name}\nLOCATION: ${profile.location}\n`;
   if(profile.skills.length) s+=`SKILLS: ${profile.skills.join(', ')}\n`;
   if(profile.langs.length) s+=`LANGUAGES: ${profile.langs.join(', ')}\n`;
   s+=`SUMMARY: ${profile.summary}\n`;
-  (profile.experiences||[]).forEach(e=>{if(e.title)s+=`EXP: ${e.title} at ${e.company} (${e.start}–${e.end})\n${e.desc}\n`;});
-  (profile.educations||[]).forEach(e=>{if(e.degree)s+=`EDU: ${e.degree} – ${e.inst} (${e.year})\n`;});
+  (profile.experiences||[]).forEach(e=>{if(e.title)s+=`EXP: ${e.title} at ${e.company} (${e.start}-${e.end})\n${e.desc}\n`;});
+  (profile.educations||[]).forEach(e=>{if(e.degree)s+=`EDU: ${e.degree} - ${e.inst} (${e.year})\n`;});
   return s;
 }
 
-// ── Skill match & German detection ────────────────────────────
+// -- Skill match & German detection ----
 function calcSkillMatch(jd){
   if(!jd||!profile.skills.length) return null;
   const jdL=jd.toLowerCase();
@@ -1302,14 +1302,14 @@ function liveCalcSkill(){
     const cls=sm.pct>=70?'sm-high':sm.pct>=40?'sm-mid':'sm-low';
     smEl.className=cls; smEl.textContent=sm.pct+'%';
     smDet.textContent=`${sm.matched} of ${sm.total} skills matched`;
-  }else{smEl.className='sm-none';smEl.textContent='—';smDet.textContent='Add skills to your profile';}
-  const gMap={required:'🔴 Required',preferred:'🟡 Preferred',not_required:'🟢 Not Required','':`— Not mentioned`};
+  }else{smEl.className='sm-none';smEl.textContent='--';smDet.textContent='Add skills to your profile';}
+  const gMap={required:'🔴 Required',preferred:'🟡 Preferred',not_required:'🟢 Not Required','':`-- Not mentioned`};
   gdEl.style.color=gd==='required'?'var(--red)':gd==='preferred'?'var(--amber)':gd==='not_required'?'var(--green)':'var(--text3)';
   gdEl.textContent=gMap[gd];
   gdEl.dataset.val=gd;
 }
 
-// ── Apify key management ───────────────────────────────────────
+// -- Apify key management ----
 function saveApifyKey(){
   const v = document.getElementById('apify-key').value.trim();
   if(v) localStorage.setItem('cb_apify_key', v);
@@ -1325,7 +1325,7 @@ function updateApifyKeyStatus(){
   const el = document.getElementById('apify-key-status');
   if(!el) return;
   const has = !!getApifyKey();
-  el.textContent = has ? '🟢 Key saved' : '🔴 No key — AI mode only';
+  el.textContent = has ? '🟢 Key saved' : '🔴 No key -- AI mode only';
   el.style.color = has ? 'var(--green)' : 'var(--amber)';
   if(has) refreshCreditDisplay();
 }
@@ -1348,7 +1348,7 @@ async function testApifyKey(){
     const included = d?.data?.plan?.monthlyUsageCreditsUsd ?? 5;
     const used = d?.data?.monthlyUsage?.totalUsd ?? 0;
     const remaining = Math.max(0, included-used);
-    if(el){ el.textContent='🟢 Key valid — hi '+name+'!'; el.style.color='var(--green)'; }
+    if(el){ el.textContent='🟢 Key valid -- hi '+name+'!'; el.style.color='var(--green)'; }
     alert('✅ Apify key is valid!\n\nAccount: '+name+'\nPlan: $'+included+'/month free\nUsed this month: $'+used.toFixed(3)+'\nRemaining: $'+remaining.toFixed(2)+'\n\nEstimated free scrapes left: ~'+Math.floor(remaining/0.03));
     refreshCreditDisplay();
   }catch(e){
@@ -1357,14 +1357,14 @@ async function testApifyKey(){
   }
 }
 
-// ── Master search dispatcher (kept for legacy calls) ──────────
+// -- Master search dispatcher (kept for legacy calls) ----
 async function runSearch(){ await runAISearch(); }
 
-// ── Apify actor IDs — FREE ONLY, no monthly rental ───────────
+// -- Apify actor IDs -- FREE ONLY, no monthly rental ----
 // All pay-per-compute-unit. No subscription rental fee on any of these.
 const APIFY_ACTORS = {
   // harvestapi~linkedin-job-search: FREE no-cookie actor, takes titles[]+locations[]
-  // $1/1K results, no rental, no LinkedIn account needed — confirmed working
+  // $1/1K results, no rental, no LinkedIn account needed -- confirmed working
   linkedin:  'harvestapi~linkedin-job-search',
   // memo23~xing-scraper: free, takes keyword+location
   xing:      'memo23~xing-scraper',
@@ -1374,17 +1374,17 @@ const APIFY_ACTORS = {
   indeed:    'curious_coder~indeed-scraper',
   // apify~rag-web-browser: official free actor for company careers pages
   rag:       'apify~rag-web-browser',
-  // bayt/Gulf: no dedicated actor exists — reuse LinkedIn with Dubai location
+  // bayt/Gulf: no dedicated actor exists -- reuse LinkedIn with Dubai location
   bayt:      'harvestapi~linkedin-job-search'
 };
 
-// Estimated cost per run (USD) — conservative upper bound
+// Estimated cost per run (USD) -- conservative upper bound
 const ACTOR_COST_EST = {
   linkedin:0.05, xing:0.03, stepstone:0.05,
   indeed:0.03, bayt:0.03, rag:0.02, careers:0.02
 };
 
-// ── Fetch Apify credit balance ────────────────────────────────
+// -- Fetch Apify credit balance ----
 async function fetchApifyBalance(token){
   try{
     const r = await fetch('https://api.apify.com/v2/users/me?token='+encodeURIComponent(token));
@@ -1396,7 +1396,7 @@ async function fetchApifyBalance(token){
   }catch(e){ return null; }
 }
 
-// ── Refresh credit display ────────────────────────────────────
+// -- Refresh credit display ----
 async function refreshCreditDisplay(){
   const token = getApifyKey();
   const el = document.getElementById('apify-credit-display');
@@ -1410,7 +1410,7 @@ async function refreshCreditDisplay(){
     +' <span style="color:var(--text3)">of $'+bal.included.toFixed(0)+'/mo free</span>';
 }
 
-// ── Pre-run credit gate ───────────────────────────────────────
+// -- Pre-run credit gate ----
 async function checkCreditBeforeRun(portalId){
   const token = getApifyKey();
   const cost = ACTOR_COST_EST[portalId] || 0.05;
@@ -1424,7 +1424,7 @@ async function checkCreditBeforeRun(portalId){
       +'Remaining this month: $'+bal.remaining.toFixed(3)+'\n'
       +'Estimated run cost:   ~$'+cost.toFixed(2)+'\n\n'
       +'Your free $'+bal.included+'/month renews at the start of next month.\n'
-      +'You will NEVER be charged beyond $'+bal.included+'/month on the free plan — it simply stops.\n\n'
+      +'You will NEVER be charged beyond $'+bal.included+'/month on the free plan -- it simply stops.\n\n'
       +'Tip: Use "AI Suggest Jobs" (free, no Apify needed) in the meantime.'
     );
     return false;
@@ -1465,9 +1465,9 @@ async function checkCreditBeforeRun(portalId){
   return true;
 }
 
-// ── Run one Apify actor and return dataset items ───────────────
+// -- Run one Apify actor and return dataset items ----
 async function apifyRunActor(actorId, input, token){
-  // IMPORTANT: do NOT encodeURIComponent the actorId — the ~ separator must stay as ~
+  // IMPORTANT: do NOT encodeURIComponent the actorId -- the ~ separator must stay as ~
   // e.g. 'curious_coder~linkedin-jobs-scraper' must NOT become 'curious_coder%7Elinkedin-jobs-scraper'
   const safeActorId = actorId.replace(/~/g, '~'); // keep ~ literal
   const url = `https://api.apify.com/v2/acts/${safeActorId}/runs?token=${encodeURIComponent(token)}`;
@@ -1479,7 +1479,7 @@ async function apifyRunActor(actorId, input, token){
       body: JSON.stringify(input)
     });
   }catch(netErr){
-    throw new Error('Network error reaching Apify — check your internet connection: ' + netErr.message);
+    throw new Error('Network error reaching Apify -- check your internet connection: ' + netErr.message);
   }
   if(!startResp.ok){
     const txt = await startResp.text().catch(()=>'{}');
@@ -1498,11 +1498,11 @@ async function apifyRunActor(actorId, input, token){
         + 'Detail: ' + fullDetail
       );
     }
-    if(code===403) throw new Error(`Apify 403 — access denied.
+    if(code===403) throw new Error(`Apify 403 -- access denied.
 Actor: ${actorId}
 Detail: ${fullDetail}`);
-    if(code===402) throw new Error('Apify credit exhausted — top up at console.apify.com/billing');
-    if(code===404) throw new Error(`Apify 404 — actor not found: ${actorId}
+    if(code===402) throw new Error('Apify credit exhausted -- top up at console.apify.com/billing');
+    if(code===404) throw new Error(`Apify 404 -- actor not found: ${actorId}
 Detail: ${fullDetail}`);
     throw new Error(`Apify error ${code} on actor ${actorId}: ${fullDetail}`);
   }
@@ -1529,10 +1529,10 @@ Detail: ${fullDetail}`);
   throw new Error('Timed out after 120s');
 }
 
-// ── Normalise raw items from any portal into our job format ────
+// -- Normalise raw items from any portal into our job format ----
 function normaliseApifyJobs(items, portalId, portalLabel){
   return (items||[]).map(item => {
-    // Field names vary per actor — cover all known variants
+    // Field names vary per actor -- cover all known variants
     const title    = item.title||item.positionName||item.jobTitle||item.job_title||item.name||'';
     const company  = item.companyName||item.company||item.employer||item.company_name||item.organizationName||'';
     const location = item.location||item.city||item.address||item.jobLocation||item.place||'';
@@ -1560,7 +1560,7 @@ function normaliseApifyJobs(items, portalId, portalLabel){
   }).filter(Boolean);
 }
 
-// ── Set per-portal button status ───────────────────────────────
+// -- Set per-portal button status ----
 function setPortalBtnStatus(portalId, icon, text, color, loading){
   const ic  = document.getElementById('portal-ic-'+portalId);
   const st  = document.getElementById('portal-status-'+portalId);
@@ -1577,7 +1577,7 @@ function showPortalProgress(text){
 }
 function hidePortalProgress(){ document.getElementById('portal-progress-row').style.display='none'; }
 
-// ── Merge scraped jobs into foundJobs (additive per portal) ────
+// -- Merge scraped jobs into foundJobs (additive per portal) ----
 function mergeFoundJobs(newJobs){
   const portal = newJobs[0]?.portal||'';
   // Remove previous results from same portal
@@ -1602,7 +1602,7 @@ function clearAllFoundJobs(){
   });
 }
 
-// ── Derive smart search keywords from profile using Gemini ──
+// -- Derive smart search keywords from profile using Gemini --
 // Analyses skills + experience to generate best job search query
 async function deriveSearchKeywords(){
   collectProfileFields();
@@ -1627,8 +1627,8 @@ async function deriveSearchKeywords(){
   }catch(e){ return fallback; }
 }
 
-// ── Per-portal scrape entry point ──────────────────────────
-────
+// -- Per-portal scrape entry point ----
+----
 async function scrapePortal(portalId){
   const token = getApifyKey();
   if(!token){
@@ -1638,7 +1638,7 @@ async function scrapePortal(portalId){
   }
   collectProfileFields();
   // Smart keyword generation: use Gemini to derive the best job search title
-  // from the full profile — skills, experience, and role context
+  // from the full profile -- skills, experience, and role context
   const jobTitle = await deriveSearchKeywords();
 
   const PORTAL_META = {
@@ -1650,7 +1650,7 @@ async function scrapePortal(portalId){
   };
   const meta = PORTAL_META[portalId]||{label:portalId,color:'var(--gold)',icon:'▶'};
 
-  // Credit check BEFORE starting — warns user, hard stops if insufficient
+  // Credit check BEFORE starting -- warns user, hard stops if insufficient
   setPortalBtnStatus(portalId, meta.icon, 'Checking balance…', 'var(--text3)', true);
   const creditOk = await checkCreditBeforeRun(portalId);
   if(!creditOk){
@@ -1658,9 +1658,9 @@ async function scrapePortal(portalId){
     return;
   }
   setPortalBtnStatus(portalId, meta.icon, 'Scraping…', 'var(--gold)', true);
-  showPortalProgress(`Scraping ${meta.label} for "${jobTitle}" — this takes 30–90 seconds…`);
+  showPortalProgress(`Scraping ${meta.label} for "${jobTitle}" -- this takes 30-90 seconds…`);
 
-  // Build LinkedIn search URL from job title — curious_coder scraper uses startUrls
+  // Build LinkedIn search URL from job title -- curious_coder scraper uses startUrls
   const liSearchUrl = 'https://www.linkedin.com/jobs/search/?keywords='
     + encodeURIComponent(jobTitle)
     + '&location=' + (portalId==='bayt' ? encodeURIComponent('Dubai, United Arab Emirates') : encodeURIComponent('Munich, Bavaria, Germany'))
@@ -1672,7 +1672,7 @@ async function scrapePortal(portalId){
 
   const inputs = {
     // harvestapi~linkedin-job-search: titles[] array + locations[] array
-    // Confirmed input schema from actor page — no cookies, no URL needed
+    // Confirmed input schema from actor page -- no cookies, no URL needed
     linkedin: {
       titles: [jobTitle],
       locations: [searchLocation],
@@ -1711,7 +1711,7 @@ async function scrapePortal(portalId){
   try{
     const items = await apifyRunActor(APIFY_ACTORS[portalId], inputs[portalId], token);
     const jobs  = normaliseApifyJobs(items, portalId, meta.label);
-    if(!jobs.length) throw new Error('No jobs returned — try a different job title or check your profile');
+    if(!jobs.length) throw new Error('No jobs returned -- try a different job title or check your profile');
     mergeFoundJobs(jobs);
     setPortalBtnStatus(portalId, '✅', `${jobs.length} jobs`, 'var(--green)', false);
   }catch(err){
@@ -1723,7 +1723,7 @@ async function scrapePortal(portalId){
   }
 }
 
-// ── Company careers page scraper (uses Apify RAG Web Browser) ─
+// -- Company careers page scraper (uses Apify RAG Web Browser) -
 async function scrapeCompanyCareers(){
   const token = getApifyKey();
   if(!token){
@@ -1793,7 +1793,7 @@ ${pageText.substring(0,4000)}`;
       extracted = [];
     }
 
-    if(!extracted.length) throw new Error('No job listings found on that page — try the search URL directly');
+    if(!extracted.length) throw new Error('No job listings found on that page -- try the search URL directly');
 
     const companyName = new URL(careersUrl).hostname.replace('www.','').replace('careers.','').replace('jobs.','').split('.')[0];
     const companyDisplay = companyName.charAt(0).toUpperCase()+companyName.slice(1);
@@ -1834,7 +1834,7 @@ function showToast(msg, color, bg){
   t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),4000);
 }
 
-// ── AI-only fallback ──────────────────────────────────────────
+// -- AI-only fallback ----
 async function runAISearch(){
   collectProfileFields();
   if(!profile.skills.length && !profile.summary && !profile.name){
@@ -1844,12 +1844,12 @@ async function runAISearch(){
   if(btn) btn.innerHTML='<span class="spinner"></span>';
   document.getElementById('search-empty-state').style.display='none';
 
-  // Compact prompt — short field names, includes short description for CV/CL context
+  // Compact prompt -- short field names, includes short description for CV/CL context
   const system = 'Return ONLY a valid JSON array. No markdown, no text outside the array.\n'
     + 'Each object has EXACTLY these fields:\n'
     + '{"t":"Job Title","co":"Company","loc":"City, Country","r":"munich|germany|europe|dubai","g":"required|preferred|not_required|none","p":"Portal name","su":"portal_search_url","cu":"careers_search_url","d":"2-3 sentence job description"}\n\n'
-    + 'MANDATORY DISTRIBUTION — exactly 15 objects: first 6 r=munich, next 5 r=germany, next 2 r=europe, last 2 r=dubai.\n\n'
-    + 'URL RULES — su must be a targeted search on the named portal for this exact role+location:\n'
+    + 'MANDATORY DISTRIBUTION -- exactly 15 objects: first 6 r=munich, next 5 r=germany, next 2 r=europe, last 2 r=dubai.\n\n'
+    + 'URL RULES -- su must be a targeted search on the named portal for this exact role+location:\n'
     + '  LinkedIn: https://www.linkedin.com/jobs/search/?keywords=TITLE+COMPANY&location=LOCATION&f_C=COMPANY_ID (use title+company as keywords)\n'
     + '  StepStone: https://www.stepstone.de/jobs/TITLE-SLUG/in-LOCATION-SLUG/?q=TITLE\n'
     + '  Indeed DE: https://de.indeed.com/jobs?q=%22TITLE%22+COMPANY&l=LOCATION\n'
@@ -1962,7 +1962,7 @@ async function runAISearch(){
   } catch(e){
     document.getElementById('search-empty-state').style.display = 'block';
     document.getElementById('search-empty-state').innerHTML =
-      '<div style="color:var(--red);font-size:13px;padding:20px">✕ ' + e.message + '<br><span style="font-size:11px;color:var(--text3);margin-top:6px;display:block">Try again — if it keeps failing, check your Gemini API key.</span></div>';
+      '<div style="color:var(--red);font-size:13px;padding:20px">✕ ' + e.message + '<br><span style="font-size:11px;color:var(--text3);margin-top:6px;display:block">Try again -- if it keeps failing, check your Gemini API key.</span></div>';
     console.error(e);
   } finally{
     const ic2 = document.getElementById('ai-search-ic');
@@ -2002,7 +2002,7 @@ function clearJobFilters(){
 
 const REGION_LABELS = {munich:'🟣 Munich', germany:'🟡 Germany', europe:'🔵 Europe', dubai:'🟢 Dubai'};
 const REGION_CLS = {munich:'rb-munich', germany:'rb-germany', europe:'rb-europe', dubai:'rb-dubai'};
-const GERMAN_LABELS = {required:'🔴 Req.', preferred:'🟡 Pref.', not_required:'🟢 No', none:'—'};
+const GERMAN_LABELS = {required:'🔴 Req.', preferred:'🟡 Pref.', not_required:'🟢 No', none:'--'};
 
 function renderFoundJobs(list){
   const wrap = document.getElementById('jobs-found-wrap');
@@ -2012,18 +2012,18 @@ function renderFoundJobs(list){
 
   if(!list.length){
     wrap.style.display='none'; empty.style.display='block';
-    empty.innerHTML='<div style="font-size:13px;color:var(--text3)">No jobs match your filters — try clearing them</div>';
+    empty.innerHTML='<div style="font-size:13px;color:var(--text3)">No jobs match your filters -- try clearing them</div>';
     return;
   }
   empty.style.display='none'; wrap.style.display='block';
-  count.textContent = list.length + ' job' + (list.length===1?'':'s') + ' found — sorted by region priority (Munich first)';
+  count.textContent = list.length + ' job' + (list.length===1?'':'s') + ' found -- sorted by region priority (Munich first)';
 
   tbody.innerHTML = list.map(j => {
-    const rLabel = REGION_LABELS[j.region]||j.region||'—';
+    const rLabel = REGION_LABELS[j.region]||j.region||'--';
     const rCls = REGION_CLS[j.region]||'rb-germany';
-    const gLabel = GERMAN_LABELS[j.german||'none']||'—';
+    const gLabel = GERMAN_LABELS[j.german||'none']||'--';
 
-    // ── Portal Link column ─────────────────────────────────────
+    // -- Portal Link column ----
     // Colour and label based on the portal name
     const pName = (j.portal||'').toLowerCase();
     let pColor = 'var(--gold)', pLabel = 'Search ↗';
@@ -2042,12 +2042,12 @@ function renderFoundJobs(list){
     const portalLinkCell = j.portal_url
       ? `<a href="${esc(j.portal_url)}" target="_blank" onclick="trackJobClick('${j.id}')"
            style="font-size:11px;color:${pColor};text-decoration:none;white-space:nowrap;font-weight:500">${pLabel}</a>`
-      : `<span style="color:var(--text3);font-size:11px">—</span>`;
+      : `<span style="color:var(--text3);font-size:11px">--</span>`;
 
-    // ── Company Careers column ─────────────────────────────────
+    // -- Company Careers column ----
     // careers_url from AI already has search term baked in.
     // We also generate a fallback search URL from the base careers domain.
-    let careersCell = '<span style="color:var(--text3);font-size:11px">—</span>';
+    let careersCell = '<span style="color:var(--text3);font-size:11px">--</span>';
     if(j.careers_url){
       // Extract base domain for the "Home" link, keep full URL for "Search"
       let careersBase = '';
@@ -2073,11 +2073,11 @@ function renderFoundJobs(list){
     return `<tr id="fj-row-${j.id}">
       <td><div style="font-weight:500;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(j.title)}">${esc(j.title)}</div>
           <div style="font-size:10.5px;color:var(--text3);margin-top:2px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(j.description||'')}">${esc((j.description||'').substring(0,80))}${j.description&&j.description.length>80?'…':''}</div></td>
-      <td style="color:var(--text2);white-space:nowrap;font-size:12px">${esc(j.company||'—')}</td>
-      <td style="font-size:11.5px;color:var(--text3);white-space:nowrap">${esc(j.location||'—')}</td>
+      <td style="color:var(--text2);white-space:nowrap;font-size:12px">${esc(j.company||'--')}</td>
+      <td style="font-size:11.5px;color:var(--text3);white-space:nowrap">${esc(j.location||'--')}</td>
       <td><span class="rb ${rCls}">${rLabel}</span></td>
       <td style="font-size:11.5px">${gLabel}</td>
-      <td style="font-size:11px;color:var(--text3)">${esc(j.portal||'—')}</td>
+      <td style="font-size:11px;color:var(--text3)">${esc(j.portal||'--')}</td>
       <td style="white-space:nowrap">${portalLinkCell}</td>
       <td style="white-space:nowrap">${careersCell}</td>
       <td style="white-space:nowrap;display:flex;gap:4px;align-items:center">
@@ -2089,16 +2089,16 @@ function renderFoundJobs(list){
   }).join('');
 }
 
-// ── Click tracking — show "Did you apply?" on return ──────────
+// -- Click tracking -- show "Did you apply?" on return ----
 const pendingApply = {};
 function trackJobClick(id){
   pendingApply[id] = true;
-  // Check after a delay — if user comes back to this tab
+  // Check after a delay -- if user comes back to this tab
   setTimeout(()=>{
     if(pendingApply[id] && document.getElementById('s-search').classList.contains('act')){
       showApplyPrompt(id);
     }
-  }, 8000); // 8 sec — enough time to glance at the job
+  }, 8000); // 8 sec -- enough time to glance at the job
   // Also on next show() call to this section
 }
 
@@ -2186,7 +2186,7 @@ function addFoundJobToTracker(id){
   setTimeout(()=>{btn.textContent='+';btn.style.color='';},2000);
 }
 
-// ── JD Fetch Modal — open job URL, paste full JD, then build ──
+// -- JD Fetch Modal -- open job URL, paste full JD, then build --
 let _jdModalJob = null, _jdModalType = null;
 
 function openJDModal(jobId, type){
@@ -2198,7 +2198,7 @@ function openJDModal(jobId, type){
   document.getElementById('jd-fetch-subtitle').textContent =
     'Building ' + (type==='resume'?'Resume':'Cover Letter') + ' for: ' + job.title + ' @ ' + (job.company||'');
 
-  // Build open links — portal first, then careers
+  // Build open links -- portal first, then careers
   const links = [];
   if(job.portal_url) {
     const pName = (job.portal||'').toLowerCase();
@@ -2216,7 +2216,7 @@ function openJDModal(jobId, type){
 
   document.getElementById('jd-fetch-links').innerHTML = links.map(l=>
     `<a href="${esc(l.url)}" target="_blank" class="btn btn-sm" style="color:${l.color};border-color:${l.color};text-decoration:none">${l.label}</a>`
-  ).join('') + (links.length===0?'<span style="font-size:12px;color:var(--text3)">No direct URL available — search manually on the portal</span>':'');
+  ).join('') + (links.length===0?'<span style="font-size:12px;color:var(--text3)">No direct URL available -- search manually on the portal</span>':'');
 
   // Pre-fill with AI description as placeholder hint
   const ta = document.getElementById('jd-fetch-text');
@@ -2278,12 +2278,12 @@ function confirmJDAndBuild(){
   }
 }
 
-// ── Build Resume or Cover Letter for a specific found job (legacy fallback) ──
+// -- Build Resume or Cover Letter for a specific found job (legacy fallback) --
 function buildForJob(jobId, type){
   openJDModal(jobId, type);
 }
 
-// ── Styled Resume Preview (HTML → Print → PDF) ─────────────────
+// -- Styled Resume Preview (HTML → Print → PDF) ----
 function openResumePreview(){
   const rawText = document.getElementById('res-out').textContent.trim();
   if(!rawText || rawText === 'Generating…') { alert('Generate a resume first.'); return; }
@@ -2301,7 +2301,7 @@ document.getElementById('resume-preview-modal').addEventListener('click', functi
 function printResume(){
   const content = document.getElementById('resume-print-area').innerHTML;
   const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Resume — ${esc(profile.name||'')}</title>
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Resume -- ${esc(profile.name||'')}</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;color:#111;background:#fff;padding:0}
@@ -2381,10 +2381,10 @@ function formatResumeAsHTML(rawText, prof){
       continue;
     }
 
-    // Role + dates line (contains | or — with years)
+    // Role + dates line (contains | or -- with years)
     if(/\b(20\d\d|19\d\d|Present|current)\b/i.test(trimmed) && trimmed.length < 100){
       if(inList){ html += '</ul>'; inList=false; }
-      const parts = trimmed.split(/\s*[|–—]\s*/);
+      const parts = trimmed.split(/\s*[|---]\s*/);
       if(parts.length >= 2){
         const last = parts[parts.length-1];
         const isDate = /\b(20\d\d|19\d\d|Present|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/i.test(last);
@@ -2430,7 +2430,7 @@ function loadFoundJobs(){
 }
 
 
-// ── Job Tracker ────────────────────────────────────────────────
+// -- Job Tracker ----
 const STATUS_META={
   saved:{label:'💾 Saved',cls:'sb-saved',order:0},
   applied:{label:'📤 Applied',cls:'sb-applied',order:1},
@@ -2498,22 +2498,22 @@ function jobRow(j){
   const m=STATUS_META[j.status]||STATUS_META.saved;
   const rLabels={munich:'🟣 Munich',germany:'🟡 Germany',europe:'🔵 Europe',dubai:'🟢 Dubai'};
   const rCls={munich:'rb-munich',germany:'rb-germany',europe:'rb-europe',dubai:'rb-dubai'};
-  const regionBadge=j.region?`<span class="rb ${rCls[j.region]||''}">${rLabels[j.region]||j.region}</span>`:'—';
-  const gLabels={required:'🔴 Req.',preferred:'🟡 Pref.',not_required:'🟢 No','':`<span style="color:var(--text3)">—</span>`};
-  const germanCell=gLabels[j.german||'']||'—';
+  const regionBadge=j.region?`<span class="rb ${rCls[j.region]||''}">${rLabels[j.region]||j.region}</span>`:'--';
+  const gLabels={required:'🔴 Req.',preferred:'🟡 Pref.',not_required:'🟢 No','':`<span style="color:var(--text3)">--</span>`};
+  const germanCell=gLabels[j.german||'']||'--';
   const sm=j.skillMatch?parseInt(j.skillMatch):null;
-  const smHtml=sm!==null?`<span class="${sm>=70?'sm-high':sm>=40?'sm-mid':'sm-low'}">${sm}%</span>`:`<span class="sm-none">—</span>`;
+  const smHtml=sm!==null?`<span class="${sm>=70?'sm-high':sm>=40?'sm-mid':'sm-low'}">${sm}%</span>`:`<span class="sm-none">--</span>`;
   return `<tr>
-    <td style="font-size:11px;color:var(--text3);white-space:nowrap">${j.date||'—'}</td>
+    <td style="font-size:11px;color:var(--text3);white-space:nowrap">${j.date||'--'}</td>
     <td><div class="td-title" title="${esc(j.title)}">${esc(j.title)}</div></td>
-    <td style="color:var(--text2);white-space:nowrap;font-size:12px">${esc(j.company||'—')}</td>
+    <td style="color:var(--text2);white-space:nowrap;font-size:12px">${esc(j.company||'--')}</td>
     <td>${regionBadge}</td>
-    <td style="color:var(--text3);font-size:11px">${esc(j.source||'—')}</td>
+    <td style="color:var(--text3);font-size:11px">${esc(j.source||'--')}</td>
     <td><span class="sb ${m.cls}" style="cursor:pointer" onclick="cycleStatus('${j.id}')" title="Click to advance status">${m.label}</span></td>
     <td style="font-size:11.5px">${germanCell}</td>
     <td class="td-sm">${smHtml}</td>
-    <td style="font-size:11.5px;color:var(--text2);white-space:nowrap">${esc(j.salary||'—')}</td>
-    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;color:var(--text2)" title="${esc(j.notes||'')}">${esc(j.notes||'—')}</td>
+    <td style="font-size:11.5px;color:var(--text2);white-space:nowrap">${esc(j.salary||'--')}</td>
+    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;color:var(--text2)" title="${esc(j.notes||'')}">${esc(j.notes||'--')}</td>
     <td style="white-space:nowrap">
       ${j.url?`<a href="${j.url}" target="_blank" style="font-size:11px;color:var(--gold);text-decoration:none;margin-right:5px">Job ↗</a>`:''}
       ${j.careers?`<a href="${j.careers}" target="_blank" style="font-size:11px;color:var(--green);text-decoration:none">Direct ↗</a>`:''}
@@ -2622,15 +2622,15 @@ function closeAddModal(){
   ['aj-title','aj-company','aj-location','aj-source','aj-date','aj-url','aj-careers','aj-salary','aj-notes','aj-jd'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('aj-status').value='saved';
   document.getElementById('aj-region').value='munich';
-  document.getElementById('aj-skill-preview').textContent='—';
+  document.getElementById('aj-skill-preview').textContent='--';
   document.getElementById('aj-skill-detail').textContent='';
-  document.getElementById('aj-german-preview').textContent='—';
+  document.getElementById('aj-german-preview').textContent='--';
   delete document.getElementById('aj-german-preview').dataset.val;
 }
 function closeEditModal(){document.getElementById('edit-modal').classList.remove('show');}
 
-// ── Resume & Cover ─────────────────────────────────────────────
-// ── Central Gemini API caller (completely free) ──────────────
+// -- Resume & Cover ----
+// -- Central Gemini API caller (completely free) ----
 function getGeminiKey(){
   return localStorage.getItem('cb_gemini_key') || document.getElementById('gemini-key')?.value || '';
 }
@@ -2674,7 +2674,7 @@ async function callGemini(parts, maxTokens){
       } else if(code===400){
         msg = 'Invalid request (400): ' + detail.substring(0,120);
       } else if(code===403){
-        msg = 'API key rejected (403) — double-check your key at aistudio.google.com/apikey';
+        msg = 'API key rejected (403) -- double-check your key at aistudio.google.com/apikey';
       } else {
         msg = 'Gemini error ' + code + ': ' + detail.substring(0,120);
       }
@@ -2729,18 +2729,18 @@ function genCL(){
   const mgr=document.getElementById('cl-mgr').value;
   const why=document.getElementById('cl-why').value;
   const toneMap={formal:'highly formal German business style',professional:'professional and engaging',enthusiastic:'enthusiastic and passionate'};
-  const lenMap={concise:'3 paragraphs',standard:'4–5 paragraphs',detailed:'6+ paragraphs'};
+  const lenMap={concise:'3 paragraphs',standard:'4-5 paragraphs',detailed:'6+ paragraphs'};
   document.getElementById('cl-out-card').style.display='block';
   aiCall(`Expert cover letter writer for German/European market. Tone: ${toneMap[document.getElementById('cl-tone').value]}. Length: ${lenMap[document.getElementById('cl-len').value]}. Output letter only.`,
     `Job: ${jd}\nCompany: ${co}\n${mgr?'Manager: '+mgr:''}\n${why?'Why: '+why:''}\nSalutation: "${mgr?'Dear '+mgr+',':'Dear Hiring Team,'}"\n\nCandidate:\n${buildProfileStr()}`,'cl-out','cl-btn','cl-ic');
 }
 
-// ── Navigation ─────────────────────────────────────────────────
+// -- Navigation ----
 const TB={
-  profile:['My Profile','Upload resume or fill manually — auto-saved on this device'],
-  search:['Find Jobs','AI-matched portal links — Munich first, then Germany, Europe, Dubai'],
-  portals:['All Portals','Complete directory — Germany, Europe & Dubai'],
-  tracker:['My Applications','Sorted by latest first — filter by region, status, German, skill match'],
+  profile:['My Profile','Upload resume or fill manually -- auto-saved on this device'],
+  search:['Find Jobs','AI-matched portal links -- Munich first, then Germany, Europe, Dubai'],
+  portals:['All Portals','Complete directory -- Germany, Europe & Dubai'],
+  tracker:['My Applications','Sorted by latest first -- filter by region, status, German, skill match'],
   resume:['Resume Builder','ATS-optimised resume tailored to any job description'],
   cover:['Cover Letter','Personalised letter that passes ATS and wins interviews']
 };
@@ -2761,7 +2761,7 @@ function show(sec,el){
   }
 }
 
-// ── Utilities ──────────────────────────────────────────────────
+// -- Utilities ----
 function copyEl(id){
   navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
     const b=event.currentTarget;b.textContent='✓ Copied';setTimeout(()=>b.textContent='Copy',2000);
