@@ -868,6 +868,7 @@ const K_NAME='cb_name',K_ROLE='cb_role',K_PROFILE='cb_profile',K_JOBS='cb_jobs',
 // ── State ──────────────────────────────────────────────────────
 let profile={name:'',email:'',phone:'',location:'',linkedin:'',portfolio:'',summary:'',skills:[],langs:[],experiences:[],educations:[]};
 let jobs=[];
+let foundJobs=[]; // top-level — prevents ReferenceError in mergeFoundJobs
 let saveTimer=null;
 let expCount=0,eduCount=0;
 let currentSort='date_desc';
@@ -1362,18 +1363,19 @@ async function runSearch(){ await runAISearch(); }
 // ── Apify actor IDs — FREE ONLY, no monthly rental ───────────
 // All pay-per-compute-unit. No subscription rental fee on any of these.
 const APIFY_ACTORS = {
-  // curious_coder~linkedin-jobs-scraper: confirmed free, no rental, uses startUrls
-  linkedin:  'curious_coder~linkedin-jobs-scraper',
-  // memo23~xing-scraper: confirmed free
+  // harvestapi~linkedin-job-search: FREE no-cookie actor, takes titles[]+locations[]
+  // $1/1K results, no rental, no LinkedIn account needed — confirmed working
+  linkedin:  'harvestapi~linkedin-job-search',
+  // memo23~xing-scraper: free, takes keyword+location
   xing:      'memo23~xing-scraper',
-  // stepstone: confirmed free
+  // stepstone: free, takes keyword+location
   stepstone: 'fatihtahta~stepstone-scraper-fast-reliable-4-1k',
-  // curious_coder~indeed-scraper: confirmed free
+  // curious_coder~indeed-scraper: free, takes urls[] of Indeed search pages
   indeed:    'curious_coder~indeed-scraper',
-  // bayt: confirmed free
-  bayt:      'curious_coder~bayt-jobs-scraper',
-  // official Apify RAG browser — free, for company careers pages
-  rag:       'apify~rag-web-browser'
+  // apify~rag-web-browser: official free actor for company careers pages
+  rag:       'apify~rag-web-browser',
+  // bayt/Gulf: no dedicated actor exists — reuse LinkedIn with Dubai location
+  bayt:      'harvestapi~linkedin-job-search'
 };
 
 // Estimated cost per run (USD) — conservative upper bound
@@ -1600,7 +1602,33 @@ function clearAllFoundJobs(){
   });
 }
 
-// ── Per-portal scrape entry point ──────────────────────────────
+// ── Derive smart search keywords from profile using Gemini ──
+// Analyses skills + experience to generate best job search query
+async function deriveSearchKeywords(){
+  collectProfileFields();
+  const fallback = localStorage.getItem(K_ROLE)
+    || (profile.experiences&&profile.experiences[0]&&profile.experiences[0].title)
+    || (profile.skills||[]).slice(0,4).join(' ')
+    || 'professional';
+
+  if(!getGeminiKey() || (!profile.skills?.length && !profile.summary)) return fallback;
+
+  try{
+    const prompt = 'Based on this candidate profile, return ONLY a concise job search query '
+      + '(3-6 words max, no explanation) that best represents their role for LinkedIn/job portals. '
+      + 'Focus on the most senior/specific title matching their experience. '
+      + 'Examples: Senior Payments Engineer, SEPA Compliance Manager, SAP FI Consultant\n\n'
+      + 'Summary: ' + (profile.summary||'').substring(0,300) + '\n'
+      + 'Top skills: ' + (profile.skills||[]).slice(0,10).join(', ') + '\n'
+      + 'Latest role: ' + ((profile.experiences&&profile.experiences[0]&&profile.experiences[0].title)||'');
+    const result = await callGemini([{text: prompt}], 50);
+    const cleaned = result.trim().replace(/[^a-zA-Z0-9 \-+&]/g,'').split('\n')[0].trim();
+    return (cleaned.length > 2 && cleaned.length < 60) ? cleaned : fallback;
+  }catch(e){ return fallback; }
+}
+
+// ── Per-portal scrape entry point ──────────────────────────
+────
 async function scrapePortal(portalId){
   const token = getApifyKey();
   if(!token){
@@ -1609,7 +1637,9 @@ async function scrapePortal(portalId){
     return;
   }
   collectProfileFields();
-  const jobTitle = localStorage.getItem(K_ROLE) || profile.experiences?.[0]?.title || (profile.skills||[]).slice(0,3).join(' ') || 'professional';
+  // Smart keyword generation: use Gemini to derive the best job search title
+  // from the full profile — skills, experience, and role context
+  const jobTitle = await deriveSearchKeywords();
 
   const PORTAL_META = {
     linkedin:  { label:'LinkedIn',  color:'var(--blue)',   icon:'🔗' },
@@ -1636,40 +1666,44 @@ async function scrapePortal(portalId){
     + '&location=' + (portalId==='bayt' ? encodeURIComponent('Dubai, United Arab Emirates') : encodeURIComponent('Munich, Bavaria, Germany'))
     + '&f_TPR=r604800&position=1&pageNum=0';
 
+  // Location for non-Dubai portals
+  const isGulf = portalId === 'bayt';
+  const searchLocation = isGulf ? 'Dubai, United Arab Emirates' : 'Munich, Germany';
+
   const inputs = {
-    // curious_coder~linkedin-jobs-scraper: takes 'search_url' as a plain string
-    // Copy the LinkedIn jobs search URL and pass it directly
+    // harvestapi~linkedin-job-search: titles[] array + locations[] array
+    // Confirmed input schema from actor page — no cookies, no URL needed
     linkedin: {
-      search_url: liSearchUrl,
-      count: 10,
+      titles: [jobTitle],
+      locations: [searchLocation],
+      limit: 10,
       proxy: { useApifyProxy: true }
     },
-    // memo23~xing-scraper: confirmed field names
+    // memo23~xing-scraper: keyword + location
     xing: {
-      position: jobTitle,
+      keyword: jobTitle,
       location: 'München',
       maxItems: 10,
       proxy: { useApifyProxy: true }
     },
-    // fatihtahta~stepstone: confirmed field names
+    // fatihtahta~stepstone: keyword + location
     stepstone: {
-      position: jobTitle,
+      keyword: jobTitle,
       location: 'München',
       maxItems: 10,
       proxy: { useApifyProxy: true }
     },
-    // curious_coder~indeed-scraper: confirmed field names
+    // curious_coder~indeed-scraper: urls[] of Indeed search page URLs
     indeed: {
-      queries: [jobTitle],
-      location: 'München, Germany',
+      urls: ['https://de.indeed.com/jobs?q=' + encodeURIComponent(jobTitle) + '&l=M%C3%BCnchen'],
       maxItems: 10,
       proxy: { useApifyProxy: true }
     },
-    // curious_coder~bayt-jobs-scraper: confirmed field names
+    // bayt/Gulf: uses same harvestapi LinkedIn actor but with Dubai location
     bayt: {
-      query: jobTitle,
-      location: 'Dubai',
-      maxItems: 10,
+      titles: [jobTitle],
+      locations: ['Dubai, United Arab Emirates'],
+      limit: 10,
       proxy: { useApifyProxy: true }
     }
   };
