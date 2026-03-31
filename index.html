@@ -1637,9 +1637,9 @@ async function scrapePortal(portalId){
     + '&f_TPR=r604800&position=1&pageNum=0';
 
   const inputs = {
-    // curious_coder~linkedin-jobs-scraper: startUrls array + count limit
+    // curious_coder~linkedin-jobs-scraper: requires 'urls' field (not startUrls)
     linkedin: {
-      startUrls: [{ url: liSearchUrl }],
+      urls: [liSearchUrl],
       count: 10,
       proxy: { useApifyProxy: true }
     },
