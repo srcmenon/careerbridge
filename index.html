@@ -1637,9 +1637,10 @@ async function scrapePortal(portalId){
     + '&f_TPR=r604800&position=1&pageNum=0';
 
   const inputs = {
-    // curious_coder~linkedin-jobs-scraper: requires 'urls' field (not startUrls)
+    // curious_coder~linkedin-jobs-scraper: takes 'search_url' as a plain string
+    // Copy the LinkedIn jobs search URL and pass it directly
     linkedin: {
-      urls: [liSearchUrl],
+      search_url: liSearchUrl,
       count: 10,
       proxy: { useApifyProxy: true }
     },
